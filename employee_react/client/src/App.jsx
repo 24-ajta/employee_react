@@ -5,10 +5,11 @@ import './App.css';
 // import UserComponent from './components/UserComponent';
 import PageLayoutComponent from './components/PageLayoutComponent';
 import ProfileComponent from './components/ProfileComponent';
+import NavigationComponent from './components/NavigationComponent';
 function App() {
  return (
 <>
-
+{/* <NavigationComponent/> */}
 <PageLayoutComponent/>
 {/* <RegistrationComponent/>
 <UserComponent/> */}

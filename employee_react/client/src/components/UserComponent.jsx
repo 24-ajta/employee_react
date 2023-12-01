@@ -39,13 +39,13 @@ return (
                     <td>{item.name}</td>
                     <td>{item.place}</td>
                     <td>{item.contact}</td>
-                   <td><button className="btn btn-info"> <Link to="/profile" style={{textDecoration:"none"}}>View</Link></button></td>
+                   <td><button onClick={hadleClick} className="btn btn-info"> <Link to="/profile" style={{textDecoration:"none"}}>View</Link></button></td>
                    
                   
                   </tr>
                   <Routes>
                         <Route path='/profile' element={<ProfileComponent/>}/>
-                    </Routes>
+                  </Routes>
                     
                   </>
                   )
