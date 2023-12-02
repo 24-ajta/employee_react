@@ -59,24 +59,25 @@ export async function login(req, res) {
     }
 }
 
-export async function getprofile(req, res) {
-    try {
-        let {id} = req.user;
-        let userDetails = await userSchema.find({ _id });
-           console.log(userDetails);
-        if(userDetails.length > 0) {
-            return res.status(200).send(userDetails);
-        }
-        return res.status(404).send("error");
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send("Error Occured");
-    }
-}
+// export async function getprofile(req, res) {
+//     try {
+//         let {id} = req.user;
+//         let userDetails = await userSchema.find({ _id });
+//            console.log(userDetails);
+//         if(userDetails.length > 0) {
+//             return res.status(200).send(userDetails);
+//         }
+//         return res.status(404).send("error");
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).send("Error Occured");
+//     }
+// }
 export async function profile(req,res){
     try {
-        // let id=req.params.id;
-        let userdetails=await userSchema.findOne({_id:id});
+        console.log("single user id : ", req.params.id);
+        let id=req.params.id;
+        let userdetails=await userSchema.findOne({_id : id});
         if(userdetails){
             return res.json(userdetails);
         }

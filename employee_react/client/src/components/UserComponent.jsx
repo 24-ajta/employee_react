@@ -6,19 +6,6 @@ function UserComponent(){
 
 const {id}=useParams();
 const [data,setData] = useState([]);
-const [singleUser ,setSingleUser] = useState('');
-
-
-const handleclick=async()=>{
-try {
-  const response = await axios.get(`http://localhost:3000/api/profile/${id}`);
-  setSingleUser(response.data);
-  console.log(response.data);
-} catch (error) {
-  console.log("error fetching data",error)
-}
-}
-
 
 axios.get(`http://localhost:3000/api/listing`)
 .then((response)=>{
@@ -39,44 +26,35 @@ return (
                 <thead>
                   <tr>
                     <th scope="col">Sl No</th>
+                    <th scope="col">User Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Place</th>
                     <th scope="col">Contact</th>
-                    <th scope="col"></th>
+                    <th scope="col">View Details</th>
                   </tr>
                 </thead>
                 <tbody>
                 {data.map((item,index)=>{
                 return (
                   <>
-                    
-                  <tr key={index.id}>
+                    {console.log("index.id : ", item._id)}
+                  <tr key={item._id}>
                     <td>{index+1}</td>
+                    <td>{item._id}</td>
                     <td>{item.name}</td>
                     <td>{item.place}</td>
-                    <td>{item.contact}</td>
-                    <td><button className="btn btn-primary" onClick={handleclick}><Link to={"/profile"} style={{textDecoration:"none",color:"white"}}>View</Link></button></td>
-                   
+                    <td >{item.contact}</td>
+                    <td><button className="btn btn-primary"><Link to={`/profile/${item._id}`} style={{textDecoration:"none",color:"white"}}>View</Link></button></td>
+
                    
                   
                   </tr>
-                  {/* <Routes>
-                        <Route path='/profile' element={<ProfileComponent/>}/>
-                  </Routes> */}
-                    
                   </>
                   )
                 })}
                 </tbody>
               </table>
-              {singleUser && (
-        <div>
-          <h2>Selected Employee Details</h2>
-          <p>Name: {singleUser.name}</p>
-          <p>Email: {singleUser.email}</p>
-          {/* Display other selected employee details as needed */}
-        </div>
-      )}
+  
           
 </div>                   
 </>

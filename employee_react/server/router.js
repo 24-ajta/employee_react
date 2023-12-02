@@ -22,8 +22,8 @@ const router = Router()
 
 router.route("/register").post(rh.register);
 router.route("/login").post(rh.login);
-router.route("/profile/:_id").get(auth,rh.profile);
-router.route("/get-profile").get(auth,rh.getprofile);
+router.route("/profile/:id").get(rh.profile);
+// router.route("/get-profile").get(auth,rh.getprofile);
 router.route("/get-file").get(rh.getfile);
 router.route("/update").put(auth,rh.update);
 router.route("/listing").get(rh.listing);

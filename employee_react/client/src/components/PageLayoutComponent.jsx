@@ -15,7 +15,7 @@ return (
           <Route path="/" element={<NavigationComponent/>}/>
           <Route path='/registration' element={<RegistrationComponent/>}/>
           <Route path='/view' element={<UserComponent/>}/>
-          <Route path='/profile/' element={<ProfileComponent/>} />
+          <Route path='/profile/:id' element={<ProfileComponent/>} />
         </Routes>
         </Router>
     
