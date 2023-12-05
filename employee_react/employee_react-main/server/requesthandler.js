@@ -13,11 +13,12 @@ export async function register(req, res) {
        
         // let hashedPass = await bcrypt.hash(password, 10);
        
-        let userExist = await userSchema.findOne({name});
-        if(userExist) {
-            return res.status(400).send("User already exists");
-        }
-        let result = await userSchema.create({ name,email,place,designation,contact, password});
+        // let userExist = await userSchema.findOne({name});
+        // if(userExist) {
+        //     return res.status(400).send("User already exists");
+        // }
+        // let result = await userSchema.findOneAndUpdate({},{$set:{ name,email,place,designation,contact, password,deleted:false}},{upsert:true})
+        let result = await userSchema.create({ name,email,place,designation,contact, password,deleted:false});
         if(result){
             return res.status(200).send("Registration successful!");
         }
@@ -27,37 +28,37 @@ export async function register(req, res) {
     }
 }
 
-export async function login(req, res) {
-    try {
-        let { name, password } = req.body;
-        // if( username.length < 4 && password.length < 4) {
-        //     return res.json("Invalid username or password");
-        // }
-        let user = await userSchema.findOne({ name });
-        if(!user) {
-            return res.status(400).send("Invalid username or password");
-        }
-        let passCheck = await bcrypt.compare(password, user.password);
-        if(passCheck) {
-            let token = await sign({
-                name: user.name,
-                id: user._id
-            },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: "24h"
-            })
-            return res.status(200).json({
-                msg: "Login successful...",
-                token: token
-            })
-        }
-        return res.status(403).send("invalid username or password")
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Error");
-    }
-}
+// export async function login(req, res) {
+//     try {
+//         let { name, password } = req.body;
+//         // if( username.length < 4 && password.length < 4) {
+//         //     return res.json("Invalid username or password");
+//         // }
+//         let user = await userSchema.findOne({ name });
+//         if(!user) {
+//             return res.status(400).send("Invalid username or password");
+//         }
+//         let passCheck = await bcrypt.compare(password, user.password);
+//         if(passCheck) {
+//             let token = await sign({
+//                 name: user.name,
+//                 id: user._id
+//             },
+//             process.env.SECRET_KEY,
+//             {
+//                 expiresIn: "24h"
+//             })
+//             return res.status(200).json({
+//                 msg: "Login successful...",
+//                 token: token
+//             })
+//         }
+//         return res.status(403).send("invalid username or password")
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send("Error");
+//     }
+// }
 
 // export async function getprofile(req, res) {
 //     try {
@@ -120,7 +121,7 @@ export async function update(req,res){
         console.log("reached update api");
         const {id} =req.params;
         const {name,email,designation,place,contact} = req.body;
-        let result = await userSchema.updateOne({_id:id},{$set:{name,email,designation,place,contact}})
+        let result = await userSchema.updateOne({_id:id},{deleted: {$ne: true}},{$set:{name,email,designation,place,contact}})
         console.log(req.body);
         return res.json(result)
         // res.end()
@@ -130,7 +131,7 @@ export async function update(req,res){
 }
 export async function listing(req,res){
     try {
-        let data = await userSchema.find();
+        let data = await userSchema.find({deleted: {$ne: true}});
         return res.json(data)
     } catch (error) {
         console.log(error);
@@ -138,10 +139,27 @@ export async function listing(req,res){
     }
 }
 
+// export async function deletedata(req,res){
+//     try {
+//         const {id} =req.params;
+//         await userSchema.deleteOne({_id:id})
+//         .then((data)=>{
+//             res.status(200).send(data);
+//         })
+//         .catch((error)=>{
+//             res.status(404).send(error)
+//         })
+//     } catch (error) {
+//        return res.status(500).send("error")
+//     }
+// }
+
+
 export async function deletedata(req,res){
     try {
         const {id} =req.params;
-        await userSchema.deleteOne({_id:id})
+        await userSchema.updateOne({_id:id},{$set:{deleted:true,deletedAt:new Date}})
+        // await userSchema.deleteOne({_id:id})
         .then((data)=>{
             res.status(200).send(data);
         })

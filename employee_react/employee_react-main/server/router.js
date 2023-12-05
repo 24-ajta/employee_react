@@ -1,5 +1,5 @@
 import {Router} from "express";
-import auth from "./middlewares/auth.js"
+// import auth from "./middlewares/auth.js"
 
 
 
@@ -21,7 +21,7 @@ import * as rh from "./requesthandler.js";
 const router = Router()
 
 router.route("/register").post(rh.register);
-router.route("/login").post(rh.login);
+// router.route("/login").post(rh.login);
 router.route("/profile/:id").get(rh.profile);
 router.route("/update/:id").put(rh.update);
 // router.route("/get-profile").get(auth,rh.getprofile);

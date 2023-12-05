@@ -5,12 +5,13 @@ const schema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
+        unique:false
        
     },
     email: {
         type: String,
         required: true,
-        unique:true
+        unique:false
     },
     place:{
         type:String,
@@ -22,14 +23,23 @@ const schema = new mongoose.Schema({
     },
     contact:{
         type:String,
-        required:true,
-        unique:true
+        required:true
     },
     password: {
         type: String,
         required: true
     },
-    
+    deleted:{
+        type:Boolean,
+        default:false
+    },
+    deletedAt:{
+        type:Date
+    }
+
+},
+{
+    timestamps:true
 });
 
 export default mongoose.model.users || mongoose.model("User",schema)

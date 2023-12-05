@@ -410,7 +410,7 @@ return (
               <div className="form-group text-center "
                 style={{ padding: "20px" }}
               >
-                <Link to="/"><button type="submit" onClick={onDelete} className="btn btn-primary">
+                <Link to="/view"><button type="submit" onClick={onDelete} className="btn btn-primary">
                   Delete
                 </button></Link> 
               </div>
