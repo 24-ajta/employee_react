@@ -222,7 +222,7 @@ const RegistrationComponent=()=>{
 
   if(!values.contact){
     errors.contact='Phone Number is Required'
-  }else if(!/^\+?[1-9][0-9]{7,10}$/.test(values.contact)){
+  }else if(!/^\+?[1-9][0-9]{7,11}$/.test(values.contact)){
     errors.contact='Invalid phone number'
   }
 
@@ -307,3 +307,101 @@ return (
 
 }
 export default RegistrationComponent;
+
+// import React from 'react';
+// import { Formik, Form, Field, ErrorMessage } from 'formik';
+// import axios from 'axios';
+// import * as Yup from 'yup';
+
+// const RegistrationComponent=()=>{
+//  const initialValues={
+//   name:''
+//  };
+
+//  const handleSubmit=async(values,{resetForm})=>{
+//   try {
+//     const response= await axios.post(`http://localhost:3000/api/register`,values);
+//     console.log("Form Submitted",response.data);
+//     resetForm();
+//   } catch (error) {
+//     console.error("Not Submitted",error)
+//   }
+//  };
+
+//  const SignupSchema = Yup.object().shape({
+//   name: Yup.string()
+//     .min(2, 'Too Short!')
+//     .max(50, 'Too Long!')
+//     .required('Required'),
+  
+// });
+// return (
+//   <>
+//   <div>
+//     <h1 style={{ textAlign: "center", color: "blue" }}>Register Employee Details</h1>
+//     <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
+//     <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema} 
+//     >
+//      {({ errors, touched, isValidating }) => (
+//         <Form >
+//           <div className=" shadow-lg mb-5 bg-body rounded ">
+//           <div className="form-group text-center" >
+            
+//               <Field type="text" id="name" className="form-control" name = "name"  />
+//               <ErrorMessage name="name" style={{color:"red"}} component="div" />
+//               {Formik.touched.name && Formik.errors.name ? (
+//               <div>{Formik.errors.name}</div>
+//               ) : null}
+              
+//           </div>
+//           {/* <div className="form-group text-center" style={{ color: "blue" }}>
+//             <label htmlFor='email'>
+//               Email
+//               <Field type="email" id="email" className="form-control" name = "email" />
+//               <ErrorMessage name="email" style={{color:"red"}}  component="div"/>
+//             </label>
+//           </div>
+//           <div className="form-group text-center">
+//             <label htmlFor='place' style={{ color: "blue" }}>
+//               Place
+//               <Field type="text" id="place" className="form-control" name = "place" />
+//               <ErrorMessage name="place" style={{color:"red"}} component="div"/>
+//             </label>
+//           </div>
+//           <div className="form-group text-center" >
+//             <label htmlFor='designation' style={{ color: "blue" }}>
+//               Type Of Work
+//               <Field type="text" id="designation" className="form-control" name = "designation" />
+//               <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
+
+//             </label>
+//           </div>
+//           <div className="form-group text-center">
+//             <label htmlFor='contact' style={{ color: "blue" }}>
+//               Contact
+//               <Field type="text" id="contact" className="form-control" name = "contact" />
+//               <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
+//             </label>
+//           </div>
+//           <div className="form-group text-center">
+//             <label htmlFor='password' style={{ color: "blue" }}>
+//               Password
+//               <Field type="password" className="form-control" id="password" name = "password" />
+//               <ErrorMessage name="password" style={{color:"red"}} component="div"/>
+//             </label>
+//           </div> */}
+//           <div className="form-group text-center" style={{padding:"20px"}}>
+//           <button type="submit" className="btn btn-primary">Add Employee</button>
+//           <ErrorMessage name="submitError" style={{color:"red"}} component="div" />
+//           </div>
+//           </div>
+//         </Form>       
+//        )}
+//     </Formik>
+//     </div>
+//   </div>
+//   </>
+// );
+
+// }
+// export default RegistrationComponent;

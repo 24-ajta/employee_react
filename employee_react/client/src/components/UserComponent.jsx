@@ -10,7 +10,7 @@ const [data,setData] = useState([]);
 useEffect(()=>{
   axios.get(`http://localhost:3000/api/listing`)
   .then((response)=>{
-      setData(response.data);
+      setData(response.data.data);
       // console.log(response.status,response.data);
   })
   .catch((error)=>{

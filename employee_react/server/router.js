@@ -25,7 +25,7 @@ router.route("/register").post(rh.register);
 router.route("/profile/:id").get(rh.profile);
 router.route("/update/:id").put(rh.update);
 // router.route("/get-profile").get(auth,rh.getprofile);
-router.route("/get-file").get(rh.getfile);
+// router.route("/get-file").get(rh.getfile);
 router.route("/listing").get(rh.listing);
 router.route("/deletedata/:id").delete(rh.deletedata)
 
