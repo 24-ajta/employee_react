@@ -30,8 +30,7 @@ const schema = new mongoose.Schema({
         required: true
     },
     deleted:{
-        type:Boolean,
-        default:false
+        type:Boolean
     },
     deletedAt:{
         type:Date

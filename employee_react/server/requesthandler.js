@@ -78,9 +78,11 @@ export async function profile(req,res){
     try {
         // console.log("single user id : ", req.params.id);
         let id=req.params.id;
-        let userdetails=await userSchema.findOne({_id : id});
+        let userdetails=await userSchema.findOne({_id : id,deleted:{$ne:true}});
         if(userdetails){
-            return res.json(userdetails);
+            return res.status(200).send(userdetails);
+        }else{
+            return res.status(404).send("User not found")
         }
         return res.status(500).send("error");
     } catch (error) {
@@ -120,8 +122,13 @@ export async function update(req,res){
     try {
         console.log("reached update api");
         const {id} =req.params;
+        let userExist = await userSchema.findOne({_id:id,deleted:{$ne:true}});
+        if(!userExist){
+            return res.status(400).send("Not Found")
+        }
         const {name,email,designation,place,contact} = req.body;
-        let result = await userSchema.updateOne({_id:id},{deleted: {$ne: true}},{$set:{name,email,designation,place,contact}})
+        let result = await userSchema.updateOne({_id:id,deleted: {$ne: true}},{$set:{name,email,designation,place,contact}});
+        
         console.log(req.body);
         return res.json(result)
         // res.end()
@@ -158,14 +165,21 @@ export async function listing(req,res){
 export async function deletedata(req,res){
     try {
         const {id} =req.params;
+        let userExist = await userSchema.findOne({_id:id,deleted:{$ne:true}});
+        if(!userExist){
+            return res.status(400).send("Already deleted ")
+        }
         await userSchema.updateOne({_id:id},{$set:{deleted:true,deletedAt:new Date}})
-        // await userSchema.deleteOne({_id:id})
         .then((data)=>{
             res.status(200).send(data);
         })
         .catch((error)=>{
             res.status(404).send(error)
         })
+       
+        // await userSchema.deleteOne({_id:id})
+        
+
     } catch (error) {
        return res.status(500).send("error")
     }

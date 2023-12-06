@@ -196,16 +196,28 @@ const RegistrationComponent=()=>{
 
  const validate=(values)=>{
   const errors={};
+  
+  // if (!values.name || !values.email || !values.place || !values.designation || !values.contact || !values.password){
+  //   errors.submitError = "Please enter your details"
+  // }
   if (!values.name) {
     errors.name = 'Required';
-  } else if (!/^[A-Za-z]+ [a-zA-Z]+$/.test(values.name)) {
-    errors.firstName = 'Invalid name';
+  } else if (!/^[A-Z].*[a-z]$/.test(values.name)) {
+    errors.name = 'Invalid name';
   }
   
   if(!values.email){
     errors.email='Email is Required'
   }else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
     errors.email='Invalid email address'
+  }
+
+  if(!values.place){
+    errors.place='Place is Required'
+  }
+
+  if(!values.designation){
+    errors.designation='Work is required'
   }
 
   if(!values.contact){
@@ -237,7 +249,7 @@ return (
             <label htmlFor='name' style={{ color: "blue" }}>
               Name
               <Field type="text" id="name" className="form-control" name = "name"  />
-              <ErrorMessage name="name" />
+              <ErrorMessage name="name" style={{color:"red"}} component="div" />
               {/* {Formik.touched.name && Formik.errors.name ? (
               <div>{Formik.errors.name}</div>
               ) : null} */}
@@ -247,7 +259,7 @@ return (
             <label htmlFor='email'>
               Email
               <Field type="email" id="email" className="form-control" name = "email" />
-              <ErrorMessage name="email" component="div"/>
+              <ErrorMessage name="email" style={{color:"red"}}  component="div"/>
               {/* {errors.email && touched.email && <div>{errors.email}</div>} */}
             </label>
           </div>
@@ -255,14 +267,14 @@ return (
             <label htmlFor='place' style={{ color: "blue" }}>
               Place
               <Field type="text" id="place" className="form-control" name = "place" />
-              <ErrorMessage name="place" component="div"/>
+              <ErrorMessage name="place" style={{color:"red"}} component="div"/>
             </label>
           </div>
           <div className="form-group text-center" >
             <label htmlFor='designation' style={{ color: "blue" }}>
               Type Of Work
               <Field type="text" id="designation" className="form-control" name = "designation" />
-              <ErrorMessage name="designation" component="div"/>
+              <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
 
             </label>
           </div>
@@ -270,22 +282,22 @@ return (
             <label htmlFor='contact' style={{ color: "blue" }}>
               Contact
               <Field type="text" id="contact" className="form-control" name = "contact" />
-              <ErrorMessage name="contact" component="div"/>
+              <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
             </label>
           </div>
           <div className="form-group text-center">
             <label htmlFor='password' style={{ color: "blue" }}>
               Password
               <Field type="password" className="form-control" id="password" name = "password" />
-              <ErrorMessage name="password" component="div"/>
+              <ErrorMessage name="password" style={{color:"red"}} component="div"/>
             </label>
           </div>
           <div className="form-group text-center" style={{padding:"20px"}}>
           <button type="submit" className="btn btn-primary">Add Employee</button>
+          <ErrorMessage name="submitError" style={{color:"red"}} component="div" />
           </div>
           </div>
-        </Form>
-       
+        </Form>       
        )}
     </Formik>
     </div>
