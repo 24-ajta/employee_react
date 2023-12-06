@@ -198,7 +198,7 @@ const RegistrationComponent=()=>{
   const errors={};
   if (!values.name) {
     errors.name = 'Required';
-  } else if (values.name.length <2) {
+  } else if (!/^[A-Za-z]+ [a-zA-Z]+$/.test(values.name)) {
     errors.firstName = 'Invalid name';
   }
   
@@ -210,15 +210,15 @@ const RegistrationComponent=()=>{
 
   if(!values.contact){
     errors.contact='Phone Number is Required'
-  }else if(!/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/.test(values.contact)){
+  }else if(!/^\+?[1-9][0-9]{7,10}$/.test(values.contact)){
     errors.contact='Invalid phone number'
   }
 
-  // if(!values.password){
-  //   errors.password='Required'
-  // }else if(!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/.test(values.password)){
-  //   errors.password='Invalid password'
-  // }
+  if(!values.password){
+    errors.password='Required'
+  }else if(!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/.test(values.password)){
+    errors.password='Invalid password'
+  }
 
   return errors;
  }
@@ -226,62 +226,69 @@ const RegistrationComponent=()=>{
 return (
   <>
   <div>
-    <h1>Displaying Error Messages</h1>
+    <h1 style={{ textAlign: "center", color: "blue" }}>Register Employee Details</h1>
+    <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
     <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}
     >
      {({ errors, touched, isValidating }) => (
-        <Form>
+        <Form >
+          <div className=" shadow-lg mb-5 bg-body rounded ">
           <div className="form-group text-center" >
-            <label htmlFor='name'>
-              Name</label><br />
-              <Field type="text" id="name" name = "name" />
-              <ErrorMessage name="name" component="div"/>
+            <label htmlFor='name' style={{ color: "blue" }}>
+              Name
+              <Field type="text" id="name" className="form-control" name = "name"  />
+              <ErrorMessage name="name" />
               {/* {Formik.touched.name && Formik.errors.name ? (
               <div>{Formik.errors.name}</div>
               ) : null} */}
+              </label>
           </div>
-          <div className="form-group text-center">
+          <div className="form-group text-center" style={{ color: "blue" }}>
             <label htmlFor='email'>
               Email
-              <Field type="email" id="email" name = "email" />
+              <Field type="email" id="email" className="form-control" name = "email" />
               <ErrorMessage name="email" component="div"/>
+              {/* {errors.email && touched.email && <div>{errors.email}</div>} */}
             </label>
           </div>
           <div className="form-group text-center">
-            <label htmlFor='place'>
+            <label htmlFor='place' style={{ color: "blue" }}>
               Place
-              <Field type="text" id="place" name = "place" />
-              <ErrorMessage name="place" component="place"/>
+              <Field type="text" id="place" className="form-control" name = "place" />
+              <ErrorMessage name="place" component="div"/>
             </label>
           </div>
-          <div className="form-group text-center">
-            <label htmlFor='designation'>
+          <div className="form-group text-center" >
+            <label htmlFor='designation' style={{ color: "blue" }}>
               Type Of Work
-              <Field type="text" id="designation" name = "designation" />
+              <Field type="text" id="designation" className="form-control" name = "designation" />
               <ErrorMessage name="designation" component="div"/>
+
             </label>
           </div>
           <div className="form-group text-center">
-            <label htmlFor='contact'>
+            <label htmlFor='contact' style={{ color: "blue" }}>
               Contact
-              <Field type="text" id="contact" name = "contact" />
+              <Field type="text" id="contact" className="form-control" name = "contact" />
               <ErrorMessage name="contact" component="div"/>
-              {errors.email && touched.email && <div>{errors.email}</div>}
             </label>
           </div>
           <div className="form-group text-center">
-            <label htmlFor='password'>
+            <label htmlFor='password' style={{ color: "blue" }}>
               Password
-              <Field type="password" id="password" name = "password" />
+              <Field type="password" className="form-control" id="password" name = "password" />
               <ErrorMessage name="password" component="div"/>
             </label>
           </div>
-          <div className="form-group text-center">
-          <button type="submit">Submit</button>
+          <div className="form-group text-center" style={{padding:"20px"}}>
+          <button type="submit" className="btn btn-primary">Add Employee</button>
+          </div>
           </div>
         </Form>
+       
        )}
     </Formik>
+    </div>
   </div>
   </>
 );
