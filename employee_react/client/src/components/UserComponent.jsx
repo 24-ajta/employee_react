@@ -49,7 +49,6 @@ return (
                     <td>{item.place}</td>
                     <td >{item.contact}</td>
                     <td><button className="btn btn-primary"><Link to={`/update/${item._id}`} style={{textDecoration:"none",color:"white"}}>View</Link></button></td>
-
                    
                   
                   </tr>

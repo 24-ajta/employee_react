@@ -431,9 +431,10 @@ import React, { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import *as Yup from 'yup';
+import * as Yup from 'yup';
 
 function UpdateComponent(){
+  console.log("Component rendering...");
 const {id} = useParams("");
 const [editData,seteditData] = useState
 ({
@@ -443,61 +444,107 @@ const [editData,seteditData] = useState
   designation:'',
   contact:''
 })
-console.log("data values..",data.name)
-// const initialValues={
-//   name:editData.data.name,
-//   email:editData.data.email,
-//   place:editData.data.place,
-//   designation:editData.data.designation,
-//   contact:editData.data.contact
-//  };
-console.log("edit data",editData)
 
-const getDetails=async()=>{
-  const data=axios.get(`http://localhost:3000/api/profile/${id}`)
+// console.log("data values..",editData.name)
+
+
+const getDetails= ()=>{
+  const data=  axios.get(`http://localhost:3000/api/profile/${id}`)
   console.log(data)
   data
   .then((response)=>
   {
     console.log("User Details", response.data.data)
     seteditData(response.data.data);
-    console.log(data)
+    console.log(data.data)
   })
   .catch((error)=>{
     console.log(error)
   })
 }
-// const handleChange=(e)=>
-// {
-//   console.log("Reached here")
 
-//   seteditData((pre)=>
-//   {
-//     return {...pre,[e.target.name]:e.target.value}
-//   })
-// }
-const handleSubmit = (e) => {
-  console.log("Reached handlesubmit");
-   e.preventDefault();
-   const {name,email,designation,place,contact} = editData;
-   console.log("Datas",editData)
-   axios.put(`http://localhost:3000/api/update/${id}`,editData)
-         .then((response) => {
-        console.log('User updated successfully:', response.data);
-      })
-      .catch((error) => {
-        console.error('Error updating user data:', error);
-      });
-};
-useEffect(()=>{
-  getDetails();
-},[])
+console.log("edit data",editData.name)
+
+const initialValues={
+  // name:editData.name,
+  // email:editData.email,
+  // place:editData.place,
+  // designation:editData.designation,
+  // contact:editData.contact
+  name:editData.name,
+  email:editData.email,
+  place:editData.place,
+  designation:editData.designation,
+  contact:editData.contact
+ };
+
+
+const handleChange=(e)=>
+{
+  console.log("Reached handle change...")
+
+    // seteditData((pre)=>
+    // {
+    //   return {...pre,[e.target.name]:e.target.value}
+    // })
+
+
+}
+// const handleSubmit = (e) => {
+//   console.log("Reached handlesubmit");
+//    e.preventDefault();
+//    const {name,email,designation,place,contact} = editData;
+//    console.log("Datas",editData)
+//    axios.put(`http://localhost:3000/api/`,editData)
+//          .then((response) => {
+//         console.log('User updated successfully:', response.data);
+//       })
+//       .catch((error) => {
+//         console.error('Error updating user data:', error);
+//       });
+// };
+
+const handleSubmit=async(values,{resetForm})=>{
+  try {
+    const response= await axios.put(`http://localhost:3000/update/${id}`,values);
+    console.log("Form Submitted",response.data);
+    resetForm();
+  } catch (error) {
+    console.error("Not Submitted",error)
+  }
+ };
+
+useEffect( ()=>{
+   getDetails();
+},[]);
+
 const onDelete=async()=>{
   axios.delete(`http://localhost:3000/api/deletedata/${id}`)
   .then((response)=>{
     setData(response.data)
   })
 }
+
+// const SignupSchema = Yup.object().shape({
+
+
+//     email: Yup.string()
+//     .email('Invalid email')
+//     .required('Required'),
+
+//     place: Yup.string()
+//     .min(2,"Invalid Address")
+//     .required("Required"),
+
+//     designation: Yup.string()
+//     .required("Required"),
+
+   
+
+//   contact: Yup.string()
+//   .matches(/^[6-9]\d{9}$/, "Please enter valid phone number.")
+
+// });
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -516,7 +563,10 @@ const SignupSchema = Yup.object().shape({
     designation: Yup.string()
     .required("Required"),
 
-   
+    password: Yup.string()
+  .required('No password provided.') 
+  .min(8, 'Password is too short - should be 8 chars minimum.')
+  .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, 'Password must contain one Uppercase and one lowercase and a number.'),
 
   contact: Yup.string()
   .matches(/^[6-9]\d{9}$/, "Please enter valid phone number.")
@@ -528,6 +578,7 @@ return (
     <h1 style={{textAlign:"center"}}>Details </h1>
     <div className="container">
     <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema} >
+    {({ errors, touched, isValidating }) => (
 
       <Form className="mt-5" >
       <div className=" shadow-lg mb-5 bg-body rounded">
@@ -541,10 +592,11 @@ return (
                     type="text"
                     name='name'
                     id="name"
-                    value={editData.name}
+                    // value={editData.name}
                  
                   />
                 </label>
+              
               </div>
               <div className="form-group text-center "
                 style={{ padding: "20px" }}
@@ -556,53 +608,60 @@ return (
                     type="email"
                     name='email'
                     id="email"
-                    value={editData.email}
-                    onChange={Formik.handleChange}
+                    // value={editData.email}
+                    // onChange={handleChange}
                   />
+                   {/* {errors.email && touched.email ? (
+              <div>{errors.email }  </div>
+              ) : null} */}
+                <ErrorMessage name="email" style={{color:"red"}} component="div"/>
+
                 </label>
               </div>
               <div className="form-group text-center "
                 style={{ padding: "20px" }}
               >
-                <label htmlFor="name" style={{ color: "blue" }}>
+                <label htmlFor="designation" style={{ color: "blue" }}>
                   Work
                   <Field
                     className="form-control border border-primary"
                     type="text"
                     name='designation'
                     id="designation"
-                    value={editData.designation}
-                    onChange={Formik.handleChange}
+                    // value={editData.designation}
+                    // onChange={handleChange}
                   />
+                  <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
+
                 </label>
               </div>
               <div className="form-group text-center "
                 style={{ padding: "20px" }}
               >
-                <label htmlFor="name" style={{ color: "blue" }}>
+                <label htmlFor="place" style={{ color: "blue" }}>
                   Place
                   <Field
                     className="form-control border border-primary"
                     type="text"
                     name='place'
                     id="place"
-                    value={editData.place}
-                    onChange={Formik.handleChange}
+                    // value={editData.place}
+                    // onChange={handleChange}
                   />
                 </label>
               </div>
               <div className="form-group text-center "
                 style={{ padding: "20px" }}
               >
-                <label htmlFor="name" style={{ color: "blue" }}>
+                <label htmlFor="contact" style={{ color: "blue" }}>
                   Contact
                   <Field
                     className="form-control border border-primary"
                     type="text"
                     name='contact'
                     id="contact"
-                    value={editData.contact}
-                    onChange={Formik.handleChange}
+                    // value={editData.contact}
+                    // onChange={handleChange}
                   />
                 </label>
               </div>
@@ -624,6 +683,7 @@ return (
                 
       </div>
       </Form>
+       )}
       </Formik>
     </div>
 
