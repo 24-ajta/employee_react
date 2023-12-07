@@ -11,6 +11,7 @@ useEffect(()=>{
   axios.get(`http://localhost:3000/api/listing`)
   .then((response)=>{
       setData(response.data.data);
+      // alert(response.data.message)
       // console.log(response.status,response.data);
   })
   .catch((error)=>{
