@@ -12,7 +12,6 @@
 //     contact:''
 // })
 
-
 //   useEffect(() => {
 //     // Fetch user data based on the userId when the component mounts
 //     axios.get(`http://localhost:3000/api/profile/${id}`)
@@ -151,7 +150,7 @@
 //                 Update Details
 //                 </button>
 //               </div>
-                
+
 //       </div>
 //       </form>
 //     </div>
@@ -159,15 +158,8 @@
 //     </>
 // )
 
-
 // }
 // export default UpdateComponent;
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
@@ -230,21 +222,21 @@
 //       <form onSubmit={handleSubmit}>
 //         <label>Name:</label>
 //         <input type="text" name="name" value={newData.name} onChange={handleChange} />
-        
+
 //         <label>Email:</label>
 //         <input type="email" name="email" value={newData.email} onChange={handleChange} />
 
 //         <label>Place:</label>
 //         <input type="text" name="place" value={newData.place} onChange={handleChange} />
-        
+
 //         <label>Email:</label>
 //         <input type="text" name="designation" value={newData.designation} onChange={handleChange} />
-        
+
 //         <label>Email:</label>
 //         <input type="text" name="contact" value={newData.contact} onChange={handleChange} />
-        
+
 //         {/* Add other fields for editing */}
-        
+
 //         <button type="submit">Update</button>
 //       </form>
 //     </div>
@@ -252,9 +244,6 @@
 // };
 
 // export default UpdateComponent;
-
-
-
 
 // import axios from "axios";
 // import React, { useState,useEffect } from "react";
@@ -335,7 +324,7 @@
 //                     name='name'
 //                     id="name"
 //                     value={editData.name}
-                 
+
 //                   />
 //                 </label>
 //               </div>
@@ -405,16 +394,16 @@
 //              <button type="submit" className="btn btn-primary" style={{color:"white"}}>
 //                 Update Details
 //                 </button>
-                 
+
 //               </div>
 //               <div className="form-group text-center "
 //                 style={{ padding: "20px" }}
 //               >
 //                 <Link to="/view"><button type="submit" onClick={onDelete} className="btn btn-primary">
 //                   Delete
-//                 </button></Link> 
+//                 </button></Link>
 //               </div>
-                
+
 //       </div>
 //       </form>
 //     </div>
@@ -422,274 +411,402 @@
 //     </>
 // )
 
-
 // }
 // export default UpdateComponent;
 
-import axios from "axios";
-import React, { useState,useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+// import axios from "axios";
+// import React, { useState, useEffect } from "react";
+// import { useParams } from "react-router-dom";
+// import { Link } from "react-router-dom";
+// import { Formik, Form, Field, ErrorMessage } from "formik";
+// import * as Yup from "yup";
 
-function UpdateComponent(){
-  console.log("Component rendering...");
-const {id} = useParams("");
-const [editData,seteditData] = useState
-({
-  name:'',
-  email:'',
-  place:'',
-  designation:'',
-  contact:''
-})
+// function UpdateComponent() {
+//   console.log("Component rendering...");
+//   const { id } = useParams("");
+//   const [editData, seteditData] = useState({});
 
-// console.log("data values..",editData.name)
+//   // console.log("data values..",editData.name)
 
-
-const getDetails= ()=>{
-  const data=  axios.get(`http://localhost:3000/api/profile/${id}`)
-  console.log(data)
-  data
-  .then((response)=>
-  {
-    console.log("User Details", response.data.data)
-    seteditData(response.data.data);
-    console.log(data.data)
-  })
-  .catch((error)=>{
-    console.log(error)
-  })
-}
-
-console.log("edit data",editData.name)
-
-const initialValues={
-  // name:editData.name,
-  // email:editData.email,
-  // place:editData.place,
-  // designation:editData.designation,
-  // contact:editData.contact
-  name:editData.name,
-  email:editData.email,
-  place:editData.place,
-  designation:editData.designation,
-  contact:editData.contact
- };
-
-
-const handleChange=(e)=>
-{
-  console.log("Reached handle change...")
-
-    // seteditData((pre)=>
-    // {
-    //   return {...pre,[e.target.name]:e.target.value}
-    // })
-
-
-}
-// const handleSubmit = (e) => {
-//   console.log("Reached handlesubmit");
-//    e.preventDefault();
-//    const {name,email,designation,place,contact} = editData;
-//    console.log("Datas",editData)
-//    axios.put(`http://localhost:3000/api/`,editData)
-//          .then((response) => {
-//         console.log('User updated successfully:', response.data);
+//   const getDetails = () => {
+//     const data = axios.get(`http://localhost:3000/api/profile/${id}`);
+//     console.log(data);
+//     data
+//       .then((response) => {
+//         console.log("User Details", response.data.data);
+//         seteditData(response.data.data);
 //       })
 //       .catch((error) => {
-//         console.error('Error updating user data:', error);
+//         console.log(error);
 //       });
-// };
+//   };
 
-const handleSubmit=async(values,{resetForm})=>{
-  try {
-    const response= await axios.put(`http://localhost:3000/update/${id}`,values);
-    console.log("Form Submitted",response.data);
-    resetForm();
-  } catch (error) {
-    console.error("Not Submitted",error)
-  }
- };
+//   useEffect(() => {
+//     getDetails();
+//   }, []);
 
-useEffect( ()=>{
-   getDetails();
-},[]);
-
-const onDelete=async()=>{
-  axios.delete(`http://localhost:3000/api/deletedata/${id}`)
-  .then((response)=>{
-    setData(response.data)
-  })
-}
-
-// const SignupSchema = Yup.object().shape({
+//   const handleSubmit = async (values, { resetForm }) => {
+//     try {
+//       const response = await axios.put(
+//         `http://localhost:3000/api/update/${id}`,
+//         values
+//       );
+//       console.log("Form Submitted", response.data.data);
+//       resetForm();
+//     } catch (error) {
+//       console.error("Not Submitted", error);
+//     }
+//   };
 
 
-//     email: Yup.string()
-//     .email('Invalid email')
-//     .required('Required'),
+  // const onDelete = async () => {
+  //   axios
+  //     .delete(`http://localhost:3000/api/deletedata/${id}`)
+  //     .then((response) => {
+  //       setData(response.data);
+  //     });
+  // };
 
-//     place: Yup.string()
-//     .min(2,"Invalid Address")
-//     .required("Required"),
+//   const SignupSchema = Yup.object().shape({
+    // name: Yup.string()
+    //   .min(2, "Too Short!")
+    //   .max(50, "Too Long!")
+    //   .required("Required"),
 
-//     designation: Yup.string()
-//     .required("Required"),
+    // email: Yup.string().email("Invalid email").required("Required"),
 
-   
+    // place: Yup.string().min(2, "Invalid Address").required("Required"),
 
-//   contact: Yup.string()
-//   .matches(/^[6-9]\d{9}$/, "Please enter valid phone number.")
+    // designation: Yup.string().required("Required"),
 
-// });
+    // password: Yup.string()
+    //   .required("No password provided.")
+    //   .min(8, "Password is too short - should be 8 chars minimum.")
+    //   .matches(
+    //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+    //     "Password must contain one Uppercase and one lowercase and a number."
+    //   ),
 
-const SignupSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
+    // contact: Yup.string().matches(
+    //   /^[6-9]\d{9}$/,
+    //   "Please enter valid phone number."
+    // ),
+//   });
 
-    email: Yup.string()
-    .email('Invalid email')
-    .required('Required'),
+//   return (
+//     <>
+//       <h1 style={{ textAlign: "center" }}>Details </h1>
+//       <div className="container">
+//         <Formik 
+//         initialValues={{ 
+//             name: editData.name,
+//             email: editData.email,
+//             place: editData.place,
+//             designation: editData.designation,
+//             contact: editData.contact,
+//           }}
+//           onSubmit={handleSubmit}
+//           validationSchema={SignupSchema}
+//           enableReinitialize
+//         >
+//           {({ errors, touched, isValidating }) => (
+//             <Form className="mt-5">
+//               <div className=" shadow-lg mb-5 bg-body rounded">
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <label htmlFor="name" style={{ color: "blue" }}>
+//                     Name
+//                     <Field
+//                       className="form-control border border-primary"
+//                       type="text"
+//                       name="name"
+//                       id="name"
+//                       // value={editData.name}
+//                     />
+//                   </label>
+//                 </div>
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <label htmlFor="email" style={{ color: "blue" }}>
+//                     Email
+//                     <Field
+//                       className="form-control border border-primary"
+//                       type="email"
+//                       name="email"
+//                       id="email"
+//                       // value={values.email}
+//                       // onChange={handleChange}
+//                     />
+//                     {/* {errors.email && touched.email ? (
+//               <div>{errors.email }  </div>
+//               ) : null} */}
+//                     <ErrorMessage
+//                       name="email"
+//                       style={{ color: "red" }}
+//                       component="div"
+//                     />
+//                   </label>
+//                 </div>
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <label htmlFor="designation" style={{ color: "blue" }}>
+//                     Work
+//                     <Field
+//                       className="form-control border border-primary"
+//                       type="text"
+//                       name="designation"
+//                       id="designation"
+//                       // value={editData.designation}
+//                       // onChange={handleChange}
+//                     />
+//                     <ErrorMessage
+//                       name="designation"
+//                       style={{ color: "red" }}
+//                       component="div"
+//                     />
+//                   </label>
+//                 </div>
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <label htmlFor="place" style={{ color: "blue" }}>
+//                     Place
+//                     <Field
+//                       className="form-control border border-primary"
+//                       type="text"
+//                       name="place"
+//                       id="place"
+//                       // value={editData.place}
+//                       // onChange={handleChange}
+//                     />
+//                     <ErrorMessage
+//                       name="place"
+//                       style={{ color: "red" }}
+//                       component="div"
+//                     />
+//                   </label>
+//                 </div>
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <label htmlFor="contact" style={{ color: "blue" }}>
+//                     Contact
+//                     <Field
+//                       className="form-control border border-primary"
+//                       type="text"
+//                       name="contact"
+//                       // id="contact"
+//                       // value={editData.contact}
+//                       // onChange={handleChange}
+//                     />
+//                   </label>
+//                   <ErrorMessage
+//                     name="contact"
+//                     style={{ color: "red" }}
+//                     component="div"
+//                   />
+//                 </div>
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <button
+//                     type="submit"
+//                     className="btn btn-primary"
+//                     style={{ color: "white" }}
+//                   >
+//                     Update Details
+//                   </button>
+//                 </div>
+//                 <div
+//                   className="form-group text-center "
+//                   style={{ padding: "20px" }}
+//                 >
+//                   <Link to="/view">
+//                     <button
+//                       type="submit"
+//                       onClick={onDelete}
+//                       className="btn btn-primary"
+//                     >
+//                       Delete
+//                     </button>
+//                   </Link>
+//                 </div>
+//               </div>
+//             </Form>
+//           )}
+//         </Formik>
+//       </div>
+//     </>
+//   );
+// }
+// export default UpdateComponent;
 
-    place:Yup.string()
-    .min(2,"Invalid Address")
+
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+
+function UpdateComponent() {
+  const { id } = useParams("");
+  const [editData, seteditData] = useState({});
+
+  useEffect(() => {
+    getDetails();
+  }, []);
+
+  const getDetails = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/profile/${id}`);
+      seteditData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/api/update/${id}`, values);
+      console.log("Form Submitted", response.data.data);
+      // You might set some state or perform further actions upon successful submission
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
     .required("Required"),
 
-    designation: Yup.string()
-    .required("Required"),
+  email: Yup.string().email("Invalid email").required("Required"),
 
-    password: Yup.string()
-  .required('No password provided.') 
-  .min(8, 'Password is too short - should be 8 chars minimum.')
-  .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, 'Password must contain one Uppercase and one lowercase and a number.'),
+  place: Yup.string().min(2, "Invalid Address").required("Required"),
 
-  contact: Yup.string()
-  .matches(/^[6-9]\d{9}$/, "Please enter valid phone number.")
+  designation: Yup.string().required("Required"),
 
-});
+  password: Yup.string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum.")
+    .matches(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+      "Password must contain one Uppercase and one lowercase and a number."
+    ),
 
-return (
+  contact: Yup.string().matches(
+    /^[6-9]\d{9}$/,
+    "Please enter valid phone number."
+  ),
+  });
+  const onDelete = async () => {
+    axios
+      .delete(`http://localhost:3000/api/deletedata/${id}`)
+      .then((response) => {
+        setData(response.data);
+      });
+  };
+  return (
     <>
-    <h1 style={{textAlign:"center"}}>Details </h1>
-    <div className="container">
-    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema} >
-    {({ errors, touched, isValidating }) => (
-
-      <Form className="mt-5" >
-      <div className=" shadow-lg mb-5 bg-body rounded">
-      <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
+      <h1 style={{ textAlign: "center" }}>Details </h1>
+      <div className="container">
+        <Formik
+          initialValues={{
+            name: editData.name || '',
+            email: editData.email || '',
+            place: editData.place || '',
+            designation: editData.designation || '',
+            contact: editData.contact || '',
+          }}
+          onSubmit={handleSubmit}
+          validationSchema={SignupSchema}
+          enableReinitialize
+        >
+          {({ errors, touched }) => (
+            <Form className="mt-5">
+              {/* Form fields */}
+              <div className="form-group text-center" style={{ padding: "20px" }}>
                 <label htmlFor="name" style={{ color: "blue" }}>
                   Name
                   <Field
                     className="form-control border border-primary"
                     type="text"
-                    name='name'
-                    id="name"
-                    // value={editData.name}
-                 
+                    name="name"
                   />
+                  <ErrorMessage name="name" style={{ color: "red" }} component="div" />
                 </label>
-              
               </div>
-              <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
+              <div className="form-group text-center" style={{ padding: "20px" }}>
                 <label htmlFor="email" style={{ color: "blue" }}>
                   Email
                   <Field
                     className="form-control border border-primary"
                     type="email"
-                    name='email'
-                    id="email"
-                    // value={editData.email}
-                    // onChange={handleChange}
+                    name="email"
                   />
-                   {/* {errors.email && touched.email ? (
-              <div>{errors.email }  </div>
-              ) : null} */}
-                <ErrorMessage name="email" style={{color:"red"}} component="div"/>
-
+                  <ErrorMessage name="email" style={{ color: "red" }} component="div" />
                 </label>
               </div>
-              <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
-                <label htmlFor="designation" style={{ color: "blue" }}>
-                  Work
-                  <Field
-                    className="form-control border border-primary"
-                    type="text"
-                    name='designation'
-                    id="designation"
-                    // value={editData.designation}
-                    // onChange={handleChange}
-                  />
-                  <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
-
-                </label>
-              </div>
-              <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
+              <div className="form-group text-center" style={{ padding: "20px" }}>
                 <label htmlFor="place" style={{ color: "blue" }}>
                   Place
                   <Field
                     className="form-control border border-primary"
                     type="text"
-                    name='place'
-                    id="place"
-                    // value={editData.place}
-                    // onChange={handleChange}
+                    name="place"
                   />
+                  <ErrorMessage name="place" style={{ color: "red" }} component="div" />
                 </label>
               </div>
-              <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
-                <label htmlFor="contact" style={{ color: "blue" }}>
-                  Contact
+              <div className="form-group text-center" style={{ padding: "20px" }}>
+                <label htmlFor="designation" style={{ color: "blue" }}>
+                  Type of Work
                   <Field
                     className="form-control border border-primary"
                     type="text"
-                    name='contact'
-                    id="contact"
-                    // value={editData.contact}
-                    // onChange={handleChange}
+                    name="designation"
                   />
+                  <ErrorMessage name="designation" style={{ color: "red" }} component="div" />
                 </label>
               </div>
-              <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
-             <button type="submit" className="btn btn-primary" style={{color:"white"}}>
-                Update Details
+              <div className="form-group text-center" style={{ padding: "20px" }}>
+                <label htmlFor="contact" style={{ color: "blue" }}>
+                  Name
+                  <Field
+                    className="form-control border border-primary"
+                    type="text"
+                    name="contact"
+                  />
+                  <ErrorMessage name="contact" style={{ color: "red" }} component="div" />
+                </label>
+              </div>
+              <div className="form-group text-center" style={{ padding: "20px" }}>
+                <button type="submit" className="btn btn-primary" style={{ color: "white" }}>
+                  Update Details
                 </button>
-                 
               </div>
-              <div className="form-group text-center "
-                style={{ padding: "20px" }}
-              >
-                <Link to="/view"><button type="submit" onClick={onDelete} className="btn btn-primary">
-                  Delete
-                </button></Link> 
+              <div className="form-group text-center" style={{ padding: "20px" }}>
+                <Link to="/view">
+                  <button className="btn btn-primary" onClick={onDelete}>
+                    Delete
+                  </button>
+                </Link>
               </div>
-                
+            </Form>
+          )}
+        </Formik>
       </div>
-      </Form>
-       )}
-      </Formik>
-    </div>
-
     </>
-)
-
-
+  );
 }
 export default UpdateComponent;
