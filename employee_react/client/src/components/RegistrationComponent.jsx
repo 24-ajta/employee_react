@@ -308,10 +308,11 @@
 // }
 // export default RegistrationComponent;
 
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React ,{useState} from 'react';
+import { Formik, Form, Field, ErrorMessage, } from 'formik';
 import axios from 'axios';
 import * as Yup from 'yup';
+import SuccessComponent from './SuccessComponent';
 
 const RegistrationComponent=()=>{
  const initialValues={
@@ -322,11 +323,13 @@ const RegistrationComponent=()=>{
   contact:'',
   password:''
  };
+ const [success, setSuccess] = useState();
 
  const handleSubmit=async(values,{resetForm})=>{
   try {
     const response= await axios.post(`http://localhost:3000/api/register`,values);
     console.log("Form Submitted",response.data);
+    setSuccess(response.data.success);
     resetForm();
   } catch (error) {
     console.error("Not Submitted",error)
@@ -427,15 +430,22 @@ return (
           {/* <ErrorMessage name="name" style={{color:"red"}} component="div" /> */}
 
           <div className="form-group text-center" style={{padding:"20px"}}>
-          <button type="submit" className="btn btn-primary">Add Employee</button>
+        
+
+
+          <button type="submit" className="btn btn-primary" >Add Employee</button>
           <ErrorMessage name="submitError" style={{color:"red"}} component="div" />
           </div>
           </div>
+          <div>
+    {setSuccess && <SuccessComponent/>}
+  </div>
         </Form>       
        )}
     </Formik>
     </div>
   </div>
+ 
   </>
 );
 

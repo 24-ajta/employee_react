@@ -6,15 +6,18 @@ import './App.css';
 import PageLayoutComponent from './components/PageLayoutComponent';
 import ProfileComponent from './components/ProfileComponent';
 import NavigationComponent from './components/NavigationComponent';
+import SuccessComponent from './components/SuccessComponent';
 function App() {
  return (
 <>
 {/* <NavigationComponent/> */}
+
 <PageLayoutComponent/>
+
 {/* <RegistrationComponent/>
 <UserComponent/> */}
 {/* <ProfileComponent/> */}
-
+{/* <SuccessComponent/> */}
 </>
  )
 
