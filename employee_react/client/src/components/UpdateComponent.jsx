@@ -816,17 +816,25 @@ import { useParams, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import UpdateSuccessComponent from "./UpdateSuccessComponent";
+import DeleteComponent from "./DeleteComponent";
 
 function UpdateComponent() {
   const { id } = useParams("");
   console.log("id",id)
   const [editData, setEditData] = useState({});
-
-
+  const [update,setUpdate] =useState(false)
+  const [deletedata,setDeletedata]=useState(false);
   useEffect(() => {
     getDetails();
   }, []);
 
+  const handleupdate=()=>{
+    setUpdate(false);
+  }
+  const handledelete=()=>{
+    setDeletedata(false);
+  }
   const getDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/api/profile/${id}`);
@@ -859,6 +867,7 @@ function UpdateComponent() {
       try {
         const response = await axios.put(`http://localhost:3000/api/update/${id}`, values);
         console.log("Form Submitted", response.data.data);
+        setUpdate(response.data.success)
         // You might set some state or perform further actions upon successful submission
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -869,7 +878,8 @@ function UpdateComponent() {
     axios
       .delete(`http://localhost:3000/api/deletedata/${id}`)
       .then((response) => {
-        setData(response.data);
+        // setData(response.data);
+      setDeletedata(response.data.success);
       });
   };
 
@@ -957,12 +967,14 @@ function UpdateComponent() {
             </button>
           </div>
           <div className="form-group text-center" style={{ padding: "20px" }}>
-            <Link to="/view">
+            {/* <Link to="/view"> */}
               <button className="btn btn-primary" onClick={onDelete}>
                 Delete
               </button>
-            </Link>
+            {/* </Link> */}
           </div>
+          {update && <UpdateSuccessComponent onClose={handleupdate}/>}
+          {deletedata && <DeleteComponent onClose={handledelete}/>}
         </form>
       </div>
     </>

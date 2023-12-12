@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import './success.css'
+import './update.css';
+import { Link } from 'react-router-dom';
 
-function SuccessComponent({onClose}){
+function UpdateSuccessComponent({onClose}){
   // const [success,setSuccess] =useState()
     return (
       <>
-<div id="successcard" className="animated fadeIn">
+<div id="card" className="animated fadeIn">
   <div id="upper-side-success">
     {/*?xml version="1.0" encoding="utf-8"?*/}
     {/* Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  */}
@@ -37,22 +38,16 @@ function SuccessComponent({onClose}){
         r="32.53"
       />
     </svg>
-    <h3 id="status">Success</h3>
+    <h3 id="status">Updated</h3>
   </div>
   <div id="lower-side">
     <p id="message">
-      Congratulations, your account has been successfully created.
+      Your details has been successfully updated.
     </p>
-    <p>Add another employee</p>
-    {/* <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-  /> */}
-
-    {/* <i className="fa fa-hand-o-down" style={{textAlign:"center", fontSize: 30, color: "#128071" }}/> */}
     <button id="contBtnsuccess"  onClick={onClose}>
       Close
     </button>
+    
   </div>
 </div>
 </>
@@ -60,6 +55,6 @@ function SuccessComponent({onClose}){
 }
       {/* <button type='submit' onClick={()=>setSuccess(false)}></button>  */}
 
-export default SuccessComponent;
+export default UpdateSuccessComponent;
 
 

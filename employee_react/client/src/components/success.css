@@ -1,12 +1,14 @@
 
 
-#card {
-  position: absolute;
+#successcard {
+  position: relative;
   top: 250px;
   width: 320px;
   display: block;
-  /* margin: auto; */
-  margin-left: 40%;
+  margin: auto;
+  /* margin-right: 20%; */
+  /* margin-left: 60%; */
+  /* border: 2px solid black; */
   text-align: center;
   font-family: 'Source Sans Pro', sans-serif;
 }

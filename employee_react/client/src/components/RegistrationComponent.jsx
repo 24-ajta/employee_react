@@ -316,7 +316,7 @@ import SuccessComponent from './SuccessComponent';
 import ErrorComponent from './ErrorComponent';
 
 const RegistrationComponent=()=>{
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState("");
   const [error,setError] = useState(false);
   const [showform,setShowform] = useState(true)
 
@@ -347,7 +347,8 @@ const RegistrationComponent=()=>{
     
   } catch (error) {
     console.error("Not Submitted",error);
-    setError(response.data.success);
+    setError(true);
+    console.log("error in submitting",response.data.message)
   }
  };
 
@@ -454,14 +455,13 @@ return (
           </div>
           
              
-
         </Form>       
        
     </Formik>
     </div>
   </div>
   )}
-  {success && <SuccessComponent onClose={handleSuccess}/>}
+  {success && <SuccessComponent onClose={()=>setSuccess(false)}/>}
   {error && <ErrorComponent onClose={handleError}/>}
   </>
 );
