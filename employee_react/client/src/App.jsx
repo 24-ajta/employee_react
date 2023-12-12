@@ -7,6 +7,7 @@ import PageLayoutComponent from './components/PageLayoutComponent';
 import ProfileComponent from './components/ProfileComponent';
 import NavigationComponent from './components/NavigationComponent';
 import SuccessComponent from './components/SuccessComponent';
+import ErrorComponent from './components/ErrorComponent';
 function App() {
  return (
 <>
@@ -18,6 +19,7 @@ function App() {
 <UserComponent/> */}
 {/* <ProfileComponent/> */}
 {/* <SuccessComponent/> */}
+{/* <ErrorComponent/> */}
 </>
  )
 

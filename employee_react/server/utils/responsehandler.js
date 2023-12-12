@@ -1,6 +1,6 @@
 export function successfunction(apidata) {
   let response = {
-    success: "true",
+    success: true,
     statusCode: apidata.statusCode,
     data: apidata.data ? apidata.data : null,
     message:apidata.message?apidata.message:null,
@@ -9,7 +9,7 @@ export function successfunction(apidata) {
 }
 export function errorfunction(apidata) {
   let response = {
-    success: "false",
+    success: false,
     statuscode: apidata.statusCode,
     data: apidata.data ? apidata.data : null,
     message:apidata.message?apidata.message:null,

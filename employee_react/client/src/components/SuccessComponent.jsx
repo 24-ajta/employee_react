@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import './success.css'
 
-function SuccessComponent(){
+function SuccessComponent({onClose}){
+  // const [success,setSuccess] =useState()
     return (
+      <>
 <div id="card" className="animated fadeIn">
-  <div id="upper-side">
+  <div id="upper-side-success">
     {/*?xml version="1.0" encoding="utf-8"?*/}
     {/* Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  */}
     <svg
@@ -40,13 +43,15 @@ function SuccessComponent(){
     <p id="message">
       Congratulations, your account has been successfully created.
     </p>
-    <a href="#" id="contBtn">
-      Continue
-    </a>
+    <button id="contBtnsuccess"  onClick={onClose}>
+      Close
+    </button>
   </div>
 </div>
+</>
     )
 }
+      {/* <button type='submit' onClick={()=>setSuccess(false)}></button>  */}
 
 export default SuccessComponent;
 

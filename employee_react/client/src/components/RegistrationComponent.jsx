@@ -313,8 +313,21 @@ import { Formik, Form, Field, ErrorMessage, } from 'formik';
 import axios from 'axios';
 import * as Yup from 'yup';
 import SuccessComponent from './SuccessComponent';
+import ErrorComponent from './ErrorComponent';
 
 const RegistrationComponent=()=>{
+  const [success, setSuccess] = useState(false);
+  const [error,setError] = useState(false);
+  const [showform,setShowform] = useState(true)
+
+  const handleSuccess = () => {
+    setSuccess(false); 
+    setShowform(true);
+  };
+  
+  const handleError=()=>{
+    setError(false);
+  }
  const initialValues={
   name:'',
   email:'',
@@ -323,16 +336,18 @@ const RegistrationComponent=()=>{
   contact:'',
   password:''
  };
- const [success, setSuccess] = useState();
 
  const handleSubmit=async(values,{resetForm})=>{
   try {
     const response= await axios.post(`http://localhost:3000/api/register`,values);
     console.log("Form Submitted",response.data);
     setSuccess(response.data.success);
+    setShowform(false)
     resetForm();
+    
   } catch (error) {
-    console.error("Not Submitted",error)
+    console.error("Not Submitted",error);
+    setError(response.data.success);
   }
  };
 
@@ -364,18 +379,18 @@ const RegistrationComponent=()=>{
 });
 return (
   <>
+  {showform && (
   <div>
     <h1 style={{ textAlign: "center", color: "blue" }}>Register Employee Details</h1>
     <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
     <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema} 
     >
-     {({ errors, touched, isValidating }) => (
-        <Form >
-          <div className=" shadow-lg mb-5 bg-body rounded ">
-          <div className="form-group text-center" >
+        <Form className='mt-5'>
+          <div className=" shadow-lg  bg-body rounded ">
+          <div className="form-group text-center " >
           <label htmlFor='name' style={{ color: "blue" }}>
               Name
-              <Field type="text" id="name"  name = "name" className="form-control"  />
+              <Field type="text" id="name"  name = "name" className="form-control" style={{padding:"15px"}} />
               {/* {errors.name && touched.name ? (
               <div>{errors.name }  </div>
               ) : null} */}
@@ -386,7 +401,7 @@ return (
           <div className="form-group text-center" >
           <label htmlFor='email' style={{ color: "blue" }}>
               Email
-              <Field type="email" id="email" className="form-control" name = "email"  />
+              <Field type="email" id="email" className="form-control" name = "email"  style={{padding:"15px"}} />
               {/* {errors.email && touched.email ? (
               <div>{errors.email }  </div>
               ) : null} */}
@@ -397,28 +412,28 @@ return (
           <div className="form-group text-center">
             <label htmlFor='place' style={{ color: "blue" }}>
               Place
-              <Field type="text" id="place" className="form-control" name = "place" />
+              <Field type="text" id="place" className="form-control" name = "place"  style={{padding:"15px"}}/>
               <ErrorMessage name="place" style={{color:"red"}} component="div"/>
             </label>
           </div>
           <div className="form-group text-center">
             <label htmlFor='designation' style={{ color: "blue" }}>
               Type of Work
-              <Field type="text" id="designation" className="form-control" name = "designation" />
+              <Field type="text" id="designation" className="form-control" name = "designation"  style={{padding:"15px"}}/>
               <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
             </label>
           </div>
           <div className="form-group text-center">
             <label htmlFor='contact' style={{ color: "blue" }}>
               Contact Number
-              <Field type="text" id="contact" className="form-control" name = "contact" />
+              <Field type="text" id="contact" className="form-control" name = "contact"  style={{padding:"15px"}}/>
               <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
             </label>
           </div>
           <div className="form-group text-center" >
           <label htmlFor='password' style={{ color: "blue" }}>
               Password
-              <Field type="password" id="password" className="form-control" name = "password"  />
+              <Field type="password" id="password" className="form-control" name = "password"   style={{padding:"15px"}}/>
               {/* {errors.password && touched.password ? (
               <div>{errors.password }  </div>
               ) : null} */}
@@ -437,15 +452,17 @@ return (
           <ErrorMessage name="submitError" style={{color:"red"}} component="div" />
           </div>
           </div>
-          <div>
-    {setSuccess && <SuccessComponent/>}
-  </div>
+          
+             
+
         </Form>       
-       )}
+       
     </Formik>
     </div>
   </div>
- 
+  )}
+  {success && <SuccessComponent onClose={handleSuccess}/>}
+  {error && <ErrorComponent onClose={handleError}/>}
   </>
 );
 
