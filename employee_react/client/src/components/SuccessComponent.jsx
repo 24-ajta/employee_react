@@ -49,7 +49,7 @@ function SuccessComponent({onClose}){
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
   /> */}
 
-    {/* <i className="fa fa-hand-o-down" style={{textAlign:"center", fontSize: 30, color: "#128071" }}/> */}
+    {/* <i className="fa fa-hand-o-right" style={{ fontSize: 48, color: "blue" }}/> */}
     <button id="contBtnsuccess"  onClick={onClose}>
       Close
     </button>

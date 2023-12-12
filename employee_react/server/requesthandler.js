@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import userSchema from "./model/user.schema.js";
 import { successfunction } from "./utils/responsehandler.js";
 import { errorfunction } from "./utils/responsehandler.js";
+import registereduservalidation from "./validation/registervalid.js";
 
 const { sign } = jwt;
 
@@ -12,7 +13,8 @@ export async function register(req, res) {
     try {
         console.log(req.body);
         let { name, email,place,designation,contact,password } = req.body;
-       
+        let validationResult= await registereduservalidation(req.body);
+        console.log("Validation Result...", validationResult);
         // let hashedPass = await bcrypt.hash(password, 10);
        
         // let userExist = await userSchema.findOne({name});
@@ -20,15 +22,18 @@ export async function register(req, res) {
         //     return res.status(400).send("User already exists");
         // }
         // let result = await userSchema.findOneAndUpdate({},{$set:{ name,email,place,designation,contact, password,deleted:false}},{upsert:true})
+        
+
         let result = await userSchema.create({ name,email,place,designation,contact, password,deleted:false});
         if(result){
             // return res.status(200).send("Registration successful!");
-            let response = successfunction({statusCode:200,message:"Registered Successfully"});
+            let response = successfunction({statusCode:200,data:result,message:"Registered Successfully"});
             return res.status(200).send(response)
         }else{
             let response=errorfunction({statusCode:500,message:"Not Registered"});
             return res.status(500).send(response)
         }
+
     } catch (error) {
         console.log(error);
         return res.status(500).send("Error");

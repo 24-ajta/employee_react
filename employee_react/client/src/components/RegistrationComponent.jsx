@@ -316,7 +316,7 @@ import SuccessComponent from './SuccessComponent';
 import ErrorComponent from './ErrorComponent';
 
 const RegistrationComponent=()=>{
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false);
   const [error,setError] = useState(false);
   const [showform,setShowform] = useState(true)
 
@@ -461,7 +461,7 @@ return (
     </div>
   </div>
   )}
-  {success && <SuccessComponent onClose={()=>setSuccess(false)}/>}
+  {success && <SuccessComponent onClose={handleSuccess}/>}
   {error && <ErrorComponent onClose={handleError}/>}
   </>
 );
