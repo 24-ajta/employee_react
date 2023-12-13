@@ -50,7 +50,10 @@
   color: #757575;
   letter-spacing: 1px;
 }
-
+.icon{
+  margin-left: 0.4rem;
+  border-radius: 2px solid black;
+}
 #contBtnsuccess {
   position: relative;
   top: 1.5em;

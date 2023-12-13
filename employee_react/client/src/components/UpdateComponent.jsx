@@ -818,22 +818,31 @@ import * as Yup from "yup";
 import axios from "axios";
 import UpdateSuccessComponent from "./UpdateSuccessComponent";
 import DeleteComponent from "./DeleteComponent";
+import ErrorComponent from "./ErrorComponent";
 
 function UpdateComponent() {
   const { id } = useParams("");
   console.log("id",id)
   const [editData, setEditData] = useState({});
-  const [update,setUpdate] =useState(false)
+  const [update,setUpdate] =useState(false);
   const [deletedata,setDeletedata]=useState(false);
+  const [error,setError] = useState(null);
+  const [showform,setShowform] = useState(true);
+
+
   useEffect(() => {
     getDetails();
   }, []);
 
   const handleupdate=()=>{
     setUpdate(false);
+    setShowform(true);
   }
   const handledelete=()=>{
     setDeletedata(false);
+  }
+  const handleError=()=>{
+    setError(false);
   }
   const getDetails = async () => {
     try {
@@ -843,6 +852,7 @@ function UpdateComponent() {
       // setSuccess(response.data.success);
     } catch (error) {
       console.error("Error fetching user details:", error);
+      
     }
   };
 
@@ -867,116 +877,147 @@ function UpdateComponent() {
       try {
         const response = await axios.put(`http://localhost:3000/api/update/${id}`, values);
         console.log("Form Submitted", response.data.data);
-        setUpdate(response.data.success)
-        // You might set some state or perform further actions upon successful submission
+        setUpdate(response.data.success);
+        setShowform(false);
       } catch (error) {
         console.error("Error submitting form:", error);
+        setError(true);
+        console.log("error in submitting",error.response.data.message);
       }
     },
   });
+  // const onDelete = async () => {
+  //   try {
+  //     axios
+  //     .delete(`http://localhost:3000/api/deletedata/${id}`)
+  //     .then((response) => {
+  //       // setData(response.data);
+  //     setDeletedata(response.data.success);
+      
+  //     });
+  //   } catch (error) {
+  //     setError(true);
+  //     console.log("Error in delete",error)
+  //   }
+    
+  // };
   const onDelete = async () => {
-    axios
-      .delete(`http://localhost:3000/api/deletedata/${id}`)
-      .then((response) => {
-        // setData(response.data);
-      setDeletedata(response.data.success);
-      });
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/deletedata/${id}`);
+      if (response.data.success) {
+        setDeletedata(true); 
+        setError(false); 
+      } else {
+        setError(true); 
+      }
+    } catch (error) {
+      setError(true);
+      setDeletedata(false) 
+      console.log("Error in delete", error);
+    }
   };
+  
+  
+
+
+ 
+  
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Details</h1>
-      <div className="container">
-        <form onSubmit={formik.handleSubmit} className="mt-5">
-          {/* Form fields */}
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            <label htmlFor="name" style={{ color: "blue" }}>
-              Name
-              <input
-                className="form-control border border-primary"
-                type="text"
-                name="name"
-                {...formik.getFieldProps("name")}
-              />
-              {formik.touched.name && formik.errors.name && (
-                <div style={{ color: "red" }}>{formik.errors.name}</div>
-              )}
-            </label>
-          </div>
+      {showform && (
+      <div>
+      <h1 style={{ textAlign: "center" }}>Details</h1><div className="container">
+          <form onSubmit={formik.handleSubmit} className="mt-5">
+            {/* Form fields */}
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              <label htmlFor="name" style={{ color: "blue" }}>
+                Name
+                <input
+                  className="form-control border border-primary"
+                  type="text"
+                  name="name"
+                  {...formik.getFieldProps("name")} />
+                {formik.touched.name && formik.errors.name && (
+                  <div style={{ color: "red" }}>{formik.errors.name}</div>
+                )}
+              </label>
+            </div>
 
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            <label htmlFor="email" style={{ color: "blue" }}>
-              Email
-              <input
-                className="form-control border border-primary"
-                type="email"
-                name="email"
-                {...formik.getFieldProps("email")}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div style={{ color: "red" }}>{formik.errors.email}</div>
-              )}
-            </label>
-          </div>
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            <label htmlFor="place" style={{ color: "blue" }}>
-              Place
-              <input
-                className="form-control border border-primary"
-                type="text"
-                name="place"
-                {...formik.getFieldProps("place")}
-              />
-              {formik.touched.place && formik.errors.place && (
-                <div style={{ color: "red" }}>{formik.errors.place}</div>
-              )}
-            </label>
-          </div>
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            <label htmlFor="designation" style={{ color: "blue" }}>
-              Work
-              <input
-                className="form-control border border-primary"
-                type="text"
-                name="designation"
-                {...formik.getFieldProps("designation")}
-              />
-              {formik.touched.designation && formik.errors.designation && (
-                <div style={{ color: "red" }}>{formik.errors.designation}</div>
-              )}
-            </label>
-          </div>
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            <label htmlFor="contact" style={{ color: "blue" }}>
-              Contact
-              <input
-                className="form-control border border-primary"
-                type="text"
-                name="contact"
-                {...formik.getFieldProps("contact")}
-              />
-              {formik.touched.contact && formik.errors.contact && (
-                <div style={{ color: "red" }}>{formik.errors.contact}</div>
-              )}
-            </label>
-          </div>
-          {/* ... Other form fields */}
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            <button type="submit" className="btn btn-primary" style={{ color: "white" }}>
-              Update Details
-            </button>
-          </div>
-          <div className="form-group text-center" style={{ padding: "20px" }}>
-            {/* <Link to="/view"> */}
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              <label htmlFor="email" style={{ color: "blue" }}>
+                Email
+                <input
+                  className="form-control border border-primary"
+                  type="email"
+                  name="email"
+                  {...formik.getFieldProps("email")} />
+                {formik.touched.email && formik.errors.email && (
+                  <div style={{ color: "red" }}>{formik.errors.email}</div>
+                )}
+              </label>
+            </div>
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              <label htmlFor="place" style={{ color: "blue" }}>
+                Place
+                <input
+                  className="form-control border border-primary"
+                  type="text"
+                  name="place"
+                  {...formik.getFieldProps("place")} />
+                {formik.touched.place && formik.errors.place && (
+                  <div style={{ color: "red" }}>{formik.errors.place}</div>
+                )}
+              </label>
+            </div>
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              <label htmlFor="designation" style={{ color: "blue" }}>
+                Work
+                <input
+                  className="form-control border border-primary"
+                  type="text"
+                  name="designation"
+                  {...formik.getFieldProps("designation")} />
+                {formik.touched.designation && formik.errors.designation && (
+                  <div style={{ color: "red" }}>{formik.errors.designation}</div>
+                )}
+              </label>
+            </div>
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              <label htmlFor="contact" style={{ color: "blue" }}>
+                Contact
+                <input
+                  className="form-control border border-primary"
+                  type="text"
+                  name="contact"
+                  {...formik.getFieldProps("contact")} />
+                {formik.touched.contact && formik.errors.contact && (
+                  <div style={{ color: "red" }}>{formik.errors.contact}</div>
+                )}
+              </label>
+            </div>
+            {/* ... Other form fields */}
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              <button type="submit" className="btn btn-primary" style={{ color: "white" }}>
+                Update Details
+              </button>
+            </div>
+            <div className="form-group text-center" style={{ padding: "20px" }}>
+              {/* <Link to="/view"> */}
               <button className="btn btn-primary" onClick={onDelete}>
                 Delete
               </button>
-            {/* </Link> */}
-          </div>
-          {update && <UpdateSuccessComponent onClose={handleupdate}/>}
-          {deletedata && <DeleteComponent onClose={handledelete}/>}
-        </form>
-      </div>
+              {/* </Link> */}
+            </div>
+          </form>
+        </div>
+        </div>
+      )}
+      {update && <UpdateSuccessComponent onClose={handleupdate}/>}
+      {deletedata &&  <DeleteComponent onClose={handledelete}/>}
+      {/* {error && <ErrorComponent onClose={handleError}/>} */}
+      {/* {error && !deletedata && <ErrorComponent onClose={handleError} />} */}
+
     </>
   );
 }

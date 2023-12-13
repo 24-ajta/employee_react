@@ -342,7 +342,7 @@ const RegistrationComponent=()=>{
     const response= await axios.post(`http://localhost:3000/api/register`,values);
     console.log("Form Submitted",response.data);
     setSuccess(response.data.success);
-    setShowform(false)
+    setShowform(false);
     resetForm();
     
   } catch (error) {

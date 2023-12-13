@@ -7,7 +7,7 @@ function DeleteComponent({onClose}){
     return (
       <>
 <div id="card" className="animated fadeIn">
-  <div id="upper-side-success">
+  <div id="upper-side-deleted">
     {/*?xml version="1.0" encoding="utf-8"?*/}
     {/* Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  */}
     <svg

@@ -5,6 +5,7 @@ import userSchema from "./model/user.schema.js";
 import { successfunction } from "./utils/responsehandler.js";
 import { errorfunction } from "./utils/responsehandler.js";
 import registereduservalidation from "./validation/registervalid.js";
+import updateuservalidation from "./validation/updateuservalidation.js";
 
 const { sign } = jwt;
 
@@ -12,7 +13,7 @@ const { sign } = jwt;
 export async function register(req, res) {
     try {
         console.log(req.body);
-        let { name, email,place,designation,contact,password } = req.body;
+        let {name,email,place,designation,contact,password } = req.body;
         let validationResult= await registereduservalidation(req.body);
         console.log("Validation Result...", validationResult);
         // let hashedPass = await bcrypt.hash(password, 10);
@@ -79,16 +80,17 @@ export async function profile(req,res){
     }
 }
 
-
 export async function update(req,res){
     try {
         console.log("reached update api");
         const {id} =req.params;
         let userExist = await userSchema.findOne({_id:id,deleted:{$ne:true}});
         if(!userExist){
-            return res.status(400).send("Not Found")
+            return res.status(400).send("User Not Found")
         }
         const {name,email,designation,place,contact} = req.body;
+        let updatevalidationresult=await updateuservalidation(req.body);
+        console.log("Update validation Result",updatevalidationresult);
         let result = await userSchema.updateOne({_id:id,deleted: {$ne: true}},{$set:{name,email,designation,place,contact}});
         if(result){
             let response = successfunction({statusCode:200,data:result,message:"User Updated Successfully"});

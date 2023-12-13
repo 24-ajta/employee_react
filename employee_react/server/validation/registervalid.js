@@ -71,7 +71,7 @@ if(validator.isEmpty(data.password)){
 
 return {
     errors,
-    isValid:isEmpty(errors),
+    isValid:isEmpty(errors)
 };
 
 
