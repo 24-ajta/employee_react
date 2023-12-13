@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import './error.css'
 
-function ErrorComponent({onClose}){
+function ErrorComponent({onClose, message}){
   // const [success,setSuccess] =useState()
+  console.log("Message...",message)
     return (
       <>
 <div id="card" className="animated fadeIn">
@@ -45,7 +46,7 @@ function ErrorComponent({onClose}){
   </div>
   <div id="lower-side">
     <p id="message">
-      Something went wrong.
+      {message}
     </p>
     <button id="contBtn" onClick={onClose}>
       Back

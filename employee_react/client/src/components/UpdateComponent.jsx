@@ -824,9 +824,9 @@ function UpdateComponent() {
   const { id } = useParams("");
   console.log("id",id)
   const [editData, setEditData] = useState({});
-  const [update,setUpdate] =useState(false);
+  const [update,setUpdate] =useState(null);
   const [deletedata,setDeletedata]=useState(false);
-  const [error,setError] = useState(null);
+  const [error,setError] = useState(false);
   const [showform,setShowform] = useState(true);
 
 
@@ -852,7 +852,7 @@ function UpdateComponent() {
       // setSuccess(response.data.success);
     } catch (error) {
       console.error("Error fetching user details:", error);
-      
+      setError(true);
     }
   };
 
@@ -863,7 +863,21 @@ function UpdateComponent() {
     designation: Yup.string().required("Required"),
     contact: Yup.string().matches(/^[6-9]\d{9}$/, "Please enter a valid phone number.").required("Required"),
   });
-
+  const onDelete = async () => {
+    try {
+      axios
+      .delete(`http://localhost:3000/api/deletedata/${id}`)
+      .then((response) => {
+        // setData(response.data);
+      setDeletedata(response.data.success);
+      
+      });
+    } catch (error) {
+      setError(true);
+      console.log("Error in delete",error)
+    }
+    
+  };
   const formik = useFormik({
     initialValues: {
       name: editData.name || '',
@@ -886,36 +900,22 @@ function UpdateComponent() {
       }
     },
   });
+
   // const onDelete = async () => {
   //   try {
-  //     axios
-  //     .delete(`http://localhost:3000/api/deletedata/${id}`)
-  //     .then((response) => {
-  //       // setData(response.data);
-  //     setDeletedata(response.data.success);
-      
-  //     });
+  //     const response = await axios.delete(`http://localhost:3000/api/deletedata/${id}`);
+  //     if (response.data.success) {
+  //       setDeletedata(true); 
+  //       setError(false); 
+  //     } else {
+  //       setError(true); 
+  //     }
   //   } catch (error) {
   //     setError(true);
-  //     console.log("Error in delete",error)
+  //     setDeletedata(false) 
+  //     console.log("Error in delete", error);
   //   }
-    
   // };
-  const onDelete = async () => {
-    try {
-      const response = await axios.delete(`http://localhost:3000/api/deletedata/${id}`);
-      if (response.data.success) {
-        setDeletedata(true); 
-        setError(false); 
-      } else {
-        setError(true); 
-      }
-    } catch (error) {
-      setError(true);
-      setDeletedata(false) 
-      console.log("Error in delete", error);
-    }
-  };
   
   
 
@@ -1004,7 +1004,7 @@ function UpdateComponent() {
             </div>
             <div className="form-group text-center" style={{ padding: "20px" }}>
               {/* <Link to="/view"> */}
-              <button className="btn btn-primary" onClick={onDelete}>
+              <button className="btn btn-primary" type="button" onClick={onDelete}>
                 Delete
               </button>
               {/* </Link> */}
@@ -1015,7 +1015,7 @@ function UpdateComponent() {
       )}
       {update && <UpdateSuccessComponent onClose={handleupdate}/>}
       {deletedata &&  <DeleteComponent onClose={handledelete}/>}
-      {/* {error && <ErrorComponent onClose={handleError}/>} */}
+      {error && <ErrorComponent onClose={handleError}/>}
       {/* {error && !deletedata && <ErrorComponent onClose={handleError} />} */}
 
     </>

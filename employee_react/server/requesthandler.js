@@ -24,15 +24,19 @@ export async function register(req, res) {
         // }
         // let result = await userSchema.findOneAndUpdate({},{$set:{ name,email,place,designation,contact, password,deleted:false}},{upsert:true})
         
-
-        let result = await userSchema.create({ name,email,place,designation,contact, password,deleted:false});
-        if(result){
-            // return res.status(200).send("Registration successful!");
+        if(validationResult.isValid){
+             let result = await userSchema.create({ name,email,place,designation,contact, password,deleted:false});
+            if(result){
             let response = successfunction({statusCode:200,data:result,message:"Registered Successfully"});
-            return res.status(200).send(response)
-        }else{
+            return res.status(200).send(response);
+            }else{
             let response=errorfunction({statusCode:500,message:"Not Registered"});
-            return res.status(500).send(response)
+            return res.status(500).send(response);
+            }
+        }else{
+            let response=errorfunction({statusCode:500,message:"Validation failed"})
+            response.errors=validationResult.errors;
+            return res.status(200).send(response);
         }
 
     } catch (error) {
@@ -91,14 +95,21 @@ export async function update(req,res){
         const {name,email,designation,place,contact} = req.body;
         let updatevalidationresult=await updateuservalidation(req.body);
         console.log("Update validation Result",updatevalidationresult);
-        let result = await userSchema.updateOne({_id:id,deleted: {$ne: true}},{$set:{name,email,designation,place,contact}});
-        if(result){
-            let response = successfunction({statusCode:200,data:result,message:"User Updated Successfully"});
-            return res.status(200).send(response)
+        if(updatevalidationresult.isValid){
+            let result = await userSchema.updateOne({_id:id,deleted: {$ne: true}},{$set:{name,email,designation,place,contact}});
+            if(result){
+                let response = successfunction({statusCode:200,data:result,message:"User Updated Successfully"});
+                return res.status(200).send(response)
+            }else{
+                let response=errorfunction({statusCode:500,message:"Not able to update"});
+                return res.status(404).send(response)
+            }
         }else{
-            let response=errorfunction({statusCode:500,message:"Not able to update"});
-            return res.status(404).send(response)
+            let response=errorfunction({statusCode:500,message:"Validation failed"})
+            response.errors=updatevalidationresult.errors;
+            return res.status(500).send(response);
         }
+        
         console.log(req.body);
         return res.json(result)
         // res.end()

@@ -318,7 +318,8 @@ import ErrorComponent from './ErrorComponent';
 const RegistrationComponent=()=>{
   const [success, setSuccess] = useState(false);
   const [error,setError] = useState(false);
-  const [showform,setShowform] = useState(true)
+  const [showform,setShowform] = useState(true);
+  const [validationMessage,setValidationMessage]=useState();
 
   const handleSuccess = () => {
     setSuccess(false); 
@@ -339,16 +340,27 @@ const RegistrationComponent=()=>{
 
  const handleSubmit=async(values,{resetForm})=>{
   try {
+    console.log("Before Axios")
     const response= await axios.post(`http://localhost:3000/api/register`,values);
+    console.log("After Axios");
     console.log("Form Submitted",response.data);
-    setSuccess(response.data.success);
+    
+    if(response.data.success==true){
+      setSuccess(true);
+    }else{
+      console.log("Message from Registration : ",response.data.message)
+      setValidationMessage(response.data.message);
+      setError(true);
+      // setSuccess(false);
+    }
     setShowform(false);
     resetForm();
     
   } catch (error) {
+    console.log("Reached catch")
     console.error("Not Submitted",error);
     setError(true);
-    console.log("error in submitting",response.data.message)
+    // console.log("error in submitting",response.data.errors)
   }
  };
 
@@ -462,7 +474,7 @@ return (
   </div>
   )}
   {success && <SuccessComponent onClose={handleSuccess}/>}
-  {error && <ErrorComponent onClose={handleError}/>}
+  {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
   </>
 );
 

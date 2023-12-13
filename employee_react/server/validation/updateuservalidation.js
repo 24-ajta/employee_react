@@ -1,5 +1,6 @@
 import isEmpty from "./isEmpty.js";
 import validator from "validator";
+import userSchema from "../model/user.schema.js";
 
 async function updateuservalidation(data){
     let errors={}
@@ -24,12 +25,12 @@ async function updateuservalidation(data){
         errors.email_empty="Email is Required";
     }
     
-    // let email_count=await userSchema.countDocuments({
-    //     "email":data.email
-    // })
-    // if(email_count>0){
-    //     errors.email_exist="Email already exists";
-    // }
+    let email_count=await userSchema.countDocuments({
+        "email":data.email
+    })
+    if(email_count>0){
+        errors.email_exist="Email already exists";
+    }
     
     if(!validator.isLength(data.email,{min:2,max:30})){
         errors.email="Email must be between 2 and 30";
