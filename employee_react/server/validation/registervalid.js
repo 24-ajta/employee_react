@@ -29,7 +29,7 @@ if(validator.isEmpty(data.email)){
 }
 
 let email_count=await userSchema.countDocuments({
-    "email":data.email
+    "email":data.email,deleted:{$ne:true}
 })
 if(email_count>0){
     errors.email_exist="Email already exists";

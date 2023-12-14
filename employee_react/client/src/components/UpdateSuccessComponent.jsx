@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './update.css';
 import { Link } from 'react-router-dom';
 
-function UpdateSuccessComponent({onClose}){
+function UpdateSuccessComponent({onClose,message}){
   // const [success,setSuccess] =useState()
     return (
       <>
@@ -42,7 +42,7 @@ function UpdateSuccessComponent({onClose}){
   </div>
   <div id="lower-side">
     <p id="message">
-      Your details has been successfully updated.
+      {message}
     </p>
     <button id="contBtnsuccess"  onClick={onClose}>
       Close

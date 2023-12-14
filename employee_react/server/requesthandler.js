@@ -39,9 +39,23 @@ export async function register(req, res) {
 
 export async function listing(req,res){
     try {
-        let data = await userSchema.find({deleted: {$ne: true}});
+        let count =Number(await userSchema.count());
+        const pageNumber = req.query.page || 1;
+        const pageSize = req.query.pageSize || count;
+        let data = await userSchema
+          .find({deleted: {$ne: true}})
+          .sort({_id:-1})
+          .skip(pageSize * (pageNumber - 1))
+          .limit(pageSize);
         if(data){
-            let response = successfunction({statusCode:200,data:data,message:"User Details"});
+            let total_pages = Math.ceil(count / pageSize);
+            let details = {
+                count:count,
+                totalpages:total_pages,
+                currentPage:pageNumber,
+                datas:data,
+            };
+            let response = successfunction({statusCode:200,data:details,message:"User Details"});
             return res.status(200).send(response)
         }else{
             let response=errorfunction({statusCode:500,message:"Not able to find user details"});

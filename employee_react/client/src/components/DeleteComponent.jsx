@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './delete.css';
 import { Link } from 'react-router-dom';
 
-function DeleteComponent({onClose}){
+function DeleteComponent({onClose,message}){
   // const [success,setSuccess] =useState()
     return (
       <>
@@ -42,7 +42,7 @@ function DeleteComponent({onClose}){
   </div>
   <div id="lower-side">
     <p id="message">
-      Your details has been successfully deleted.
+      {message}
     </p>
     <Link to='/view'><button id="contBtnsuccess"  onClick={onClose}>
       Close

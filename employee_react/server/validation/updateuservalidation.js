@@ -65,10 +65,10 @@ async function updateuservalidation(data){
           errors.email_invalid = "Email is invalid";
         }
     
-        // Check if the email exists for any other user except the current user
+        
         const emailExistsForOtherUser = await userSchema.findOne({
           email: data.email,
-          _id: { $ne: data._id }, // Exclude the current user ID
+          _id: { $ne: data._id }, 
         });
     
         if (emailExistsForOtherUser) {

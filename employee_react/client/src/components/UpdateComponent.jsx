@@ -851,6 +851,7 @@ function UpdateComponent() {
       const response = await axios.get(`http://localhost:3000/api/profile/${id}`);
       formik.setValues(response.data.data)
       setEditData(response.data.data);
+      
       // setSuccess(response.data.success);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -872,6 +873,7 @@ function UpdateComponent() {
       .then((response) => {
         // setData(response.data);
       setDeletedata(response.data.success);
+      setValidationMessage(response.data.message);
       
       });
     } catch (error) {
@@ -902,6 +904,7 @@ function UpdateComponent() {
         }else if(response.data.success){
           setUpdate(true);
           setShowform(false);
+          setValidationMessage(response.data.message);
         }
         resetForm();
       }catch (error) {
@@ -1034,8 +1037,8 @@ function UpdateComponent() {
         </div>
         </div>
       )}
-      {update && <UpdateSuccessComponent onClose={handleupdate}/>}
-      {deletedata &&  <DeleteComponent onClose={handledelete}/>}
+      {update && <UpdateSuccessComponent message={validationMessage} onClose={handleupdate}/>}
+      {deletedata &&  <DeleteComponent message={validationMessage} onClose={handledelete}/>}
       {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
       {/* {error && !deletedata && <ErrorComponent onClose={handleError} />} */}
 
