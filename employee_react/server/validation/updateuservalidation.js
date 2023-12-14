@@ -21,24 +21,24 @@ async function updateuservalidation(data){
         errors.name="Name must be between 2 and 30";
     }
     
-    if(validator.isEmpty(data.email)){
-        errors.email_empty="Email is Required";
-    }
+    // if(validator.isEmpty(data.email)){
+    //     errors.email_empty="Email is Required";
+    // }
     
-    let email_count=await userSchema.countDocuments({
-        "email":data.email
-    })
-    if(email_count>0){
-        errors.email_exist="Email already exists";
-    }
+    // let email_count=await userSchema.countDocuments({
+    //     "email":data.email
+    // })
+    // if(email_count>0){
+    //     errors.email_exist="Email already exists";
+    // }
     
-    if(!validator.isLength(data.email,{min:2,max:30})){
-        errors.email="Email must be between 2 and 30";
-    }
+    // if(!validator.isLength(data.email,{min:2,max:30})){
+    //     errors.email="Email must be between 2 and 30";
+    // }
     
-    if(!validator.isEmail(data.email)){
-        errors.email_invalid="Email is invalid";
-    }
+    // if(!validator.isEmail(data.email)){
+    //     errors.email_invalid="Email is invalid";
+    // }
     
     if(validator.isEmpty(data.place)){
         errors.place_empty="Place field cannot be empty";
@@ -60,7 +60,22 @@ async function updateuservalidation(data){
     if(!validator.isLength(data.contact,{min:10})){
         errors.contact="Please enter proper contact number"
     }
+    if (!validator.isEmpty(data.email) && data.email !== data.currentEmail) {
+        if (!validator.isEmail(data.email)) {
+          errors.email_invalid = "Email is invalid";
+        }
     
+        // Check if the email exists for any other user except the current user
+        const emailExistsForOtherUser = await userSchema.findOne({
+          email: data.email,
+          _id: { $ne: data._id }, // Exclude the current user ID
+        });
+    
+        if (emailExistsForOtherUser) {
+          errors.email_exist = "Email already exists for another user";
+        }
+      }
+
     return {
         errors,
         isValid:isEmpty(errors)

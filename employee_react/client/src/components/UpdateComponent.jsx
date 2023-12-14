@@ -828,6 +828,8 @@ function UpdateComponent() {
   const [deletedata,setDeletedata]=useState(false);
   const [error,setError] = useState(false);
   const [showform,setShowform] = useState(true);
+  const [validationMessage,setValidationMessage]=useState();
+  const [backendErrors,setBackendErrors] = useState({})
 
 
   useEffect(() => {
@@ -887,16 +889,24 @@ function UpdateComponent() {
       contact: editData.contact || '',
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async(values,{setErrors,resetForm}) => {
       try {
         const response = await axios.put(`http://localhost:3000/api/update/${id}`, values);
         console.log("Form Submitted", response.data.data);
-        setUpdate(response.data.success);
-        setShowform(false);
-      } catch (error) {
+        if(response.data.errors){
+          setBackendErrors(response.data.errors);
+          setErrors(response.data.errors); 
+          setValidationMessage(response.data.message);
+          setError(true);
+          setUpdate(false);
+        }else if(response.data.success){
+          setUpdate(true);
+          setShowform(false);
+        }
+        resetForm();
+      }catch (error) {
         console.error("Error submitting form:", error);
         setError(true);
-        console.log("error in submitting",error.response.data.message);
       }
     },
   });
@@ -941,6 +951,8 @@ function UpdateComponent() {
                 {formik.touched.name && formik.errors.name && (
                   <div style={{ color: "red" }}>{formik.errors.name}</div>
                 )}
+                {backendErrors.name_empty && <div>{backendErrors.name_empty}</div>}
+                {backendErrors.name && <div>{backendErrors.name}</div>}
               </label>
             </div>
 
@@ -955,6 +967,10 @@ function UpdateComponent() {
                 {formik.touched.email && formik.errors.email && (
                   <div style={{ color: "red" }}>{formik.errors.email}</div>
                 )}
+                {/* {backendErrors.email_empty && <div>{backendErrors.email_empty}</div>} */}
+              {/* {backendErrors.email && <div>{backendErrors.email}</div>} */}
+              {/* {backendErrors.email_invalid && <div>{backendErrors.email_invalid}</div>} */}
+              {backendErrors.email_exist && <div>{backendErrors.email_exist}</div>}
               </label>
             </div>
             <div className="form-group text-center" style={{ padding: "20px" }}>
@@ -968,6 +984,8 @@ function UpdateComponent() {
                 {formik.touched.place && formik.errors.place && (
                   <div style={{ color: "red" }}>{formik.errors.place}</div>
                 )}
+                {backendErrors.place_empty && <div>{backendErrors.place_empty}</div>}
+                {backendErrors.place && <div>{backendErrors.place}</div>}
               </label>
             </div>
             <div className="form-group text-center" style={{ padding: "20px" }}>
@@ -981,6 +999,7 @@ function UpdateComponent() {
                 {formik.touched.designation && formik.errors.designation && (
                   <div style={{ color: "red" }}>{formik.errors.designation}</div>
                 )}
+                {backendErrors.designation_empty && <div>{backendErrors.designation_empty}</div>}
               </label>
             </div>
             <div className="form-group text-center" style={{ padding: "20px" }}>
@@ -994,6 +1013,8 @@ function UpdateComponent() {
                 {formik.touched.contact && formik.errors.contact && (
                   <div style={{ color: "red" }}>{formik.errors.contact}</div>
                 )}
+                {backendErrors.contact_empty && <div>{backendErrors.contact_empty}</div>}
+                {backendErrors.contact && <div>{backendErrors.contact}</div>}
               </label>
             </div>
             {/* ... Other form fields */}
@@ -1015,7 +1036,7 @@ function UpdateComponent() {
       )}
       {update && <UpdateSuccessComponent onClose={handleupdate}/>}
       {deletedata &&  <DeleteComponent onClose={handledelete}/>}
-      {error && <ErrorComponent onClose={handleError}/>}
+      {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
       {/* {error && !deletedata && <ErrorComponent onClose={handleError} />} */}
 
     </>

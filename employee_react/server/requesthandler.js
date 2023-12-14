@@ -15,17 +15,9 @@ export async function register(req, res) {
         console.log(req.body);
         let {name,email,place,designation,contact,password } = req.body;
         let validationResult= await registereduservalidation(req.body);
-        console.log("Validation Result...", validationResult);
-        // let hashedPass = await bcrypt.hash(password, 10);
-       
-        // let userExist = await userSchema.findOne({name});
-        // if(userExist) {
-        //     return res.status(400).send("User already exists");
-        // }
-        // let result = await userSchema.findOneAndUpdate({},{$set:{ name,email,place,designation,contact, password,deleted:false}},{upsert:true})
-        
+        console.log("Validation Result...", validationResult);       
         if(validationResult.isValid){
-             let result = await userSchema.create({ name,email,place,designation,contact, password,deleted:false});
+            let result = await userSchema.create({ name,email,place,designation,contact, password,deleted:false});
             if(result){
             let response = successfunction({statusCode:200,data:result,message:"Registered Successfully"});
             return res.status(200).send(response);
@@ -107,7 +99,7 @@ export async function update(req,res){
         }else{
             let response=errorfunction({statusCode:500,message:"Validation failed"})
             response.errors=updatevalidationresult.errors;
-            return res.status(500).send(response);
+            return res.status(200).send(response);
         }
         
         console.log(req.body);

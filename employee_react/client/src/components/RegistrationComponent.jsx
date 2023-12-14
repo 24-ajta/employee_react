@@ -320,6 +320,7 @@ const RegistrationComponent=()=>{
   const [error,setError] = useState(false);
   const [showform,setShowform] = useState(true);
   const [validationMessage,setValidationMessage]=useState();
+  const [backendErrors,setBackendErrors] = useState({})
 
   const handleSuccess = () => {
     setSuccess(false); 
@@ -338,30 +339,30 @@ const RegistrationComponent=()=>{
   password:''
  };
 
- const handleSubmit=async(values,{resetForm})=>{
+
+ const handleSubmit=async(values,{setErrors,resetForm})=>{
   try {
     console.log("Before Axios")
     const response= await axios.post(`http://localhost:3000/api/register`,values);
     console.log("After Axios");
     console.log("Form Submitted",response.data);
-    
-    if(response.data.success==true){
-      setSuccess(true);
-    }else{
-      console.log("Message from Registration : ",response.data.message)
-      setValidationMessage(response.data.message);
+
+      if (response.data.errors) {
+        setBackendErrors(response.data.errors);
+        setErrors(response.data.errors); 
+        setValidationMessage(response.data.message);
+        setError(true);
+        setSuccess(false);
+      } else if (response.data.success) {
+        setSuccess(true);
+        setShowform(false);
+
+      }
+      resetForm();
+    } catch (error) {
       setError(true);
-      // setSuccess(false);
     }
-    setShowform(false);
-    resetForm();
-    
-  } catch (error) {
-    console.log("Reached catch")
-    console.error("Not Submitted",error);
-    setError(true);
-    // console.log("error in submitting",response.data.errors)
-  }
+
  };
 
  const SignupSchema = Yup.object().shape({
@@ -408,7 +409,8 @@ return (
               <div>{errors.name }  </div>
               ) : null} */}
               <ErrorMessage name="name" style={{color:"red"}} component="div"/>
-
+              {backendErrors.name_empty && <div>{backendErrors.name_empty}</div>}
+              {backendErrors.name && <div>{backendErrors.name}</div>}
               </label>
           </div>
           <div className="form-group text-center" >
@@ -419,7 +421,10 @@ return (
               <div>{errors.email }  </div>
               ) : null} */}
               <ErrorMessage name="email" style={{color:"red"}} component="div"/>
-
+              {backendErrors.email_empty && <div>{backendErrors.email_empty}</div>}
+              {backendErrors.email && <div>{backendErrors.email}</div>}
+              {backendErrors.email_invalid && <div>{backendErrors.email_invalid}</div>}
+              {backendErrors.email_exist && <div>{backendErrors.email_exist}</div>}
               </label>
           </div>
           <div className="form-group text-center">
@@ -427,6 +432,8 @@ return (
               Place
               <Field type="text" id="place" className="form-control" name = "place"  style={{padding:"15px"}}/>
               <ErrorMessage name="place" style={{color:"red"}} component="div"/>
+              {backendErrors.place_empty && <div>{backendErrors.place_empty}</div>}
+              {backendErrors.place && <div>{backendErrors.place}</div>}
             </label>
           </div>
           <div className="form-group text-center">
@@ -434,6 +441,7 @@ return (
               Type of Work
               <Field type="text" id="designation" className="form-control" name = "designation"  style={{padding:"15px"}}/>
               <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
+              {backendErrors.designation_empty && <div>{backendErrors.designation_empty}</div>}
             </label>
           </div>
           <div className="form-group text-center">
@@ -441,6 +449,8 @@ return (
               Contact Number
               <Field type="text" id="contact" className="form-control" name = "contact"  style={{padding:"15px"}}/>
               <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
+              {backendErrors.contact_empty && <div>{backendErrors.contact_empty}</div>}
+              {backendErrors.contact && <div>{backendErrors.contact}</div>}
             </label>
           </div>
           <div className="form-group text-center" >
