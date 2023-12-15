@@ -8,6 +8,7 @@ import ProfileComponent from './components/ProfileComponent';
 import NavigationComponent from './components/NavigationComponent';
 import SuccessComponent from './components/SuccessComponent';
 import ErrorComponent from './components/ErrorComponent';
+import LoadingComponent from './components/LoadingComponent';
 function App() {
  return (
 <>
@@ -20,6 +21,7 @@ function App() {
 {/* <ProfileComponent/> */}
 {/* <SuccessComponent/> */}
 {/* <ErrorComponent/> */}
+{/* <LoadingComponent/> */}
 </>
  )
 

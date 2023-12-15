@@ -243,19 +243,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
+// import LoaderComponent from "./LoaderComponent";
+import LoadingComponent from "./LoadingComponent";
 
 function UserComponent() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+  const [loading,setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, [currentPage, pageSize]);
+
 
   const fetchData = () => {
-    axios
+    try {
+      axios
       .get(`http://localhost:3000/api/listing?page=${currentPage}&pageSize=${pageSize}`)
       .then((response) => {
         setData(response.data.data.datas || []);
@@ -264,10 +266,23 @@ function UserComponent() {
       .catch((error) => {
         console.log(error);
       });
+    } catch (error) {
+      console.log(error);
+    }finally{
+     setTimeout(() => {
+     setLoading(false);
+     }, 300);
+   }
+   
   };
+    useEffect(() => {
+    fetchData();
+  }, [currentPage, pageSize,loading]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  
+    
   };
 
   const renderPageNumbers = () => {
@@ -275,7 +290,7 @@ function UserComponent() {
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
         <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(i)}>
+          <button className="page-link" onClick={() => (handlePageChange(i),setLoading(true))}>
             {i}
           </button>
         </li>
@@ -284,46 +299,57 @@ function UserComponent() {
     return pageNumbers;
   };
   return (
-    <div className="container">
-      <h1 style={{ textAlign: "center" }}>User Details</h1>
-      <table className="table table-success">
-        <thead>
-          <tr>
-            <th scope="col">Sl No</th>
-            <th scope="col">User Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Place</th>
-            <th scope="col">Contact</th>
-            <th scope="col">View Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => {
-            const serialNumber = (currentPage - 1) * pageSize + index + 1;
+    <>
+    <div>{loading?(<LoadingComponent/>):(
+      <div>
+        {
+ <div className="container">
+ <h1 style={{ textAlign: "center" }}>User Details</h1>
+ <table className="table table-success">
+   <thead>
+     <tr>
+       <th scope="col">Sl No</th>
+       <th scope="col">User Id</th>
+       <th scope="col">Name</th>
+       <th scope="col">Place</th>
+       <th scope="col">Contact</th>
+       <th scope="col">View Details</th>
+     </tr>
+   </thead>
+   <tbody>
+     {data.map((item, index) => {
+       const serialNumber = (currentPage - 1) * pageSize + index + 1;
 
-            return (
-              <tr key={item._id}>
-                <td>{serialNumber}</td>
-                <td>{item._id}</td>
-                <td>{item.name}</td>
-                <td>{item.place}</td>
-                <td>{item.contact}</td>
-                <td>
-                  <button className="btn btn-primary">
-                    <Link to={`/update/${item._id}`} style={{ textDecoration: "none", color: "white" }}>View</Link>
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <nav className="d-flex justify-content-center" aria-label="Page navigation">
-      <ul className="pagination">
-        {renderPageNumbers()}
-      </ul>
-    </nav>
+       return (
+         <tr key={item._id}>
+           <td>{serialNumber}</td>
+           <td>{item._id}</td>
+           <td>{item.name}</td>
+           <td>{item.place}</td>
+           <td>{item.contact}</td>
+           <td>
+             <button className="btn btn-primary">
+               <Link to={`/update/${item._id}`} style={{ textDecoration: "none", color: "white" }}>View</Link>
+             </button>
+           </td>
+         </tr>
+       );
+     })}
+   </tbody>
+ </table>
+ <nav className="d-flex justify-content-center" aria-label="Page navigation">
+ <ul className="pagination">
+   {renderPageNumbers()}
+ </ul>
+</nav>
+</div>
+        }
+      </div>
+    )}
+
     </div>
+   
+    </>
   );
 }
 

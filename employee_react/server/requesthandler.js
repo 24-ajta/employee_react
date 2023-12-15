@@ -39,7 +39,7 @@ export async function register(req, res) {
 
 export async function listing(req,res){
     try {
-        let count =Number(await userSchema.countDocuments());
+        let count =Number(await userSchema.countDocuments({deleted:{$ne:true}}));
         const pageNumber = parseInt(req.query.page) || 1;
         const pageSize = parseInt(req.query.pageSize) || count;
         let info = await userSchema

@@ -1,6 +1,6 @@
 import React from "react";
 import RegistrationComponent from "./RegistrationComponent.jsx";
-import UserComponent from "./UserComponent";
+import UserComponent from "./UserComponent.jsx";
 import PageLayoutComponent from "./PageLayoutComponent.jsx";
 import { Link } from "react-router-dom";
 
