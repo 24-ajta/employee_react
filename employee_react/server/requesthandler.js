@@ -39,23 +39,23 @@ export async function register(req, res) {
 
 export async function listing(req,res){
     try {
-        let count =Number(await userSchema.count());
-        const pageNumber = req.query.page || 1;
-        const pageSize = req.query.pageSize || count;
-        let data = await userSchema
+        let count =Number(await userSchema.countDocuments());
+        const pageNumber = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || count;
+        let info = await userSchema
           .find({deleted: {$ne: true}})
           .sort({_id:-1})
           .skip(pageSize * (pageNumber - 1))
           .limit(pageSize);
-        if(data){
+        if(info){
             let total_pages = Math.ceil(count / pageSize);
-            let details = {
+            let data = {
                 count:count,
                 totalpages:total_pages,
                 currentPage:pageNumber,
-                datas:data,
+                datas:info,
             };
-            let response = successfunction({statusCode:200,data:details,message:"User Details"});
+            let response = successfunction({statusCode:200,data:data,message:"User Details"});
             return res.status(200).send(response)
         }else{
             let response=errorfunction({statusCode:500,message:"Not able to find user details"});
@@ -66,11 +66,50 @@ export async function listing(req,res){
 
     } catch (error) {
         console.log(error);
-        return res.status(500).send("error occured")
+        return res.status(400).send("error occured")
     }
 }
 
-
+// export async function listing(req, res) {
+//     try {
+//       let count = Number(await userSchema.countDocuments({ deleted: { $ne: true } }));
+//       const pageNumber = parseInt(req.query.page) || 1;
+//       const pageSize = parseInt(req.query.pageSize) || count;
+  
+//       if (pageNumber < 1) {
+//         return res.status(400).json({ message: 'Invalid page number' });
+//       }
+  
+//       if (pageSize <= 0) {
+//         return res.status(400).json({ message: 'Invalid page size' });
+//       }
+  
+//       let data = await userSchema
+//         .find({ deleted: { $ne: true } })
+//         .sort({ _id: -1 })
+//         .skip(pageSize * (pageNumber - 1))
+//         .limit(pageSize);
+  
+//       if (data) {
+//         let total_pages = Math.ceil(count / pageSize);
+//         let details = {
+//           count: count,
+//           totalpages: total_pages,
+//           currentPage: pageNumber,
+//           datas: data,
+//         };
+//         let response = successfunction({ statusCode: 200, data: details, message: "User Details" });
+//         return res.status(200).send(response);
+//       } else {
+//         let response = errorfunction({ statusCode: 500, message: "Not able to find user details" });
+//         return res.status(404).send(response);
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       return res.status(500).send("Error occurred");
+//     }
+//   }
+  
 export async function profile(req,res){
     try {
         // console.log("single user id : ", req.params.id);
