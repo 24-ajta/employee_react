@@ -314,13 +314,15 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import SuccessComponent from './SuccessComponent';
 import ErrorComponent from './ErrorComponent';
+import LoadingComponent from './LoadingComponent';
 
 const RegistrationComponent=()=>{
   const [success, setSuccess] = useState(false);
   const [error,setError] = useState(false);
   const [showform,setShowform] = useState(true);
   const [validationMessage,setValidationMessage]=useState();
-  const [backendErrors,setBackendErrors] = useState({})
+  const [backendErrors,setBackendErrors] = useState({});
+  const [loading,setLoading] = useState();
 
   const handleSuccess = () => {
     setSuccess(false); 
@@ -342,6 +344,7 @@ const RegistrationComponent=()=>{
 
  const handleSubmit=async(values,{setErrors,resetForm})=>{
   try {
+    setLoading(true)
     console.log("Before Axios")
     const response= await axios.post(`http://localhost:3000/api/register`,values);
     console.log("After Axios");
@@ -361,6 +364,10 @@ const RegistrationComponent=()=>{
       resetForm();
     } catch (error) {
       setError(true);
+    }finally{
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
 
  };
@@ -393,98 +400,111 @@ const RegistrationComponent=()=>{
 });
 return (
   <>
+ 
   {showform && (
-  <div>
-    <h1 style={{ textAlign: "center", color: "blue" }}>Register Employee Details</h1>
-    <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
-    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema} 
-    >
-        <Form className='mt-5'>
-          <div className=" shadow-lg  bg-body rounded ">
-          <div className="form-group text-center " >
-          <label htmlFor='name' style={{ color: "blue" }}>
-              Name
-              <Field type="text" id="name"  name = "name" className="form-control" style={{padding:"15px"}} />
-              {/* {errors.name && touched.name ? (
-              <div>{errors.name }  </div>
-              ) : null} */}
-              <ErrorMessage name="name" style={{color:"red"}} component="div"/>
-              {backendErrors.name_empty && <div>{backendErrors.name_empty}</div>}
-              {backendErrors.name && <div>{backendErrors.name}</div>}
+    <div>
+      <h1 style={{ textAlign: "center", color: "blue" }}>Register Employee Details</h1>
+      <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
+      <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema} 
+      >
+          <Form className='mt-5'>
+            <div className=" shadow-lg  bg-body rounded ">
+            <div className="form-group text-center " >
+            <label htmlFor='name' style={{ color: "blue" }}>
+                Name
+                <Field type="text" id="name"  name = "name" className="form-control" style={{padding:"15px"}} />
+                {/* {errors.name && touched.name ? (
+                <div>{errors.name }  </div>
+                ) : null} */}
+                <ErrorMessage name="name" style={{color:"red"}} component="div"/>
+                {backendErrors.name_empty && <div>{backendErrors.name_empty}</div>}
+                {backendErrors.name && <div>{backendErrors.name}</div>}
+                </label>
+            </div>
+            <div className="form-group text-center" >
+            <label htmlFor='email' style={{ color: "blue" }}>
+                Email
+                <Field type="email" id="email" className="form-control" name = "email"  style={{padding:"15px"}} />
+                {/* {errors.email && touched.email ? (
+                <div>{errors.email }  </div>
+                ) : null} */}
+                <ErrorMessage name="email" style={{color:"red"}} component="div"/>
+                {backendErrors.email_empty && <div>{backendErrors.email_empty}</div>}
+                {backendErrors.email && <div>{backendErrors.email}</div>}
+                {backendErrors.email_invalid && <div>{backendErrors.email_invalid}</div>}
+                {backendErrors.email_exist && <div>{backendErrors.email_exist}</div>}
+                </label>
+            </div>
+            <div className="form-group text-center">
+              <label htmlFor='place' style={{ color: "blue" }}>
+                Place
+                <Field type="text" id="place" className="form-control" name = "place"  style={{padding:"15px"}}/>
+                <ErrorMessage name="place" style={{color:"red"}} component="div"/>
+                {backendErrors.place_empty && <div>{backendErrors.place_empty}</div>}
+                {backendErrors.place && <div>{backendErrors.place}</div>}
               </label>
-          </div>
-          <div className="form-group text-center" >
-          <label htmlFor='email' style={{ color: "blue" }}>
-              Email
-              <Field type="email" id="email" className="form-control" name = "email"  style={{padding:"15px"}} />
-              {/* {errors.email && touched.email ? (
-              <div>{errors.email }  </div>
-              ) : null} */}
-              <ErrorMessage name="email" style={{color:"red"}} component="div"/>
-              {backendErrors.email_empty && <div>{backendErrors.email_empty}</div>}
-              {backendErrors.email && <div>{backendErrors.email}</div>}
-              {backendErrors.email_invalid && <div>{backendErrors.email_invalid}</div>}
-              {backendErrors.email_exist && <div>{backendErrors.email_exist}</div>}
+            </div>
+            <div className="form-group text-center">
+              <label htmlFor='designation' style={{ color: "blue" }}>
+                Type of Work
+                <Field type="text" id="designation" className="form-control" name = "designation"  style={{padding:"15px"}}/>
+                <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
+                {backendErrors.designation_empty && <div>{backendErrors.designation_empty}</div>}
               </label>
-          </div>
-          <div className="form-group text-center">
-            <label htmlFor='place' style={{ color: "blue" }}>
-              Place
-              <Field type="text" id="place" className="form-control" name = "place"  style={{padding:"15px"}}/>
-              <ErrorMessage name="place" style={{color:"red"}} component="div"/>
-              {backendErrors.place_empty && <div>{backendErrors.place_empty}</div>}
-              {backendErrors.place && <div>{backendErrors.place}</div>}
-            </label>
-          </div>
-          <div className="form-group text-center">
-            <label htmlFor='designation' style={{ color: "blue" }}>
-              Type of Work
-              <Field type="text" id="designation" className="form-control" name = "designation"  style={{padding:"15px"}}/>
-              <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
-              {backendErrors.designation_empty && <div>{backendErrors.designation_empty}</div>}
-            </label>
-          </div>
-          <div className="form-group text-center">
-            <label htmlFor='contact' style={{ color: "blue" }}>
-              Contact Number
-              <Field type="text" id="contact" className="form-control" name = "contact"  style={{padding:"15px"}}/>
-              <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
-              {backendErrors.contact_empty && <div>{backendErrors.contact_empty}</div>}
-              {backendErrors.contact && <div>{backendErrors.contact}</div>}
-            </label>
-          </div>
-          <div className="form-group text-center" >
-          <label htmlFor='password' style={{ color: "blue" }}>
-              Password
-              <Field type="password" id="password" className="form-control" name = "password"   style={{padding:"15px"}}/>
-              {/* {errors.password && touched.password ? (
-              <div>{errors.password }  </div>
-              ) : null} */}
-              <ErrorMessage name="password" style={{color:"red"}} component="div"/>
-
+            </div>
+            <div className="form-group text-center">
+              <label htmlFor='contact' style={{ color: "blue" }}>
+                Contact Number
+                <Field type="text" id="contact" className="form-control" name = "contact"  style={{padding:"15px"}}/>
+                <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
+                {backendErrors.contact_empty && <div>{backendErrors.contact_empty}</div>}
+                {backendErrors.contact && <div>{backendErrors.contact}</div>}
               </label>
-          </div>
-
-          {/* <ErrorMessage name="name" style={{color:"red"}} component="div" /> */}
-
-          <div className="form-group text-center" style={{padding:"20px"}}>
-        
-
-
-          <button type="submit" className="btn btn-primary" >Add Employee</button>
-          <ErrorMessage name="submitError" style={{color:"red"}} component="div" />
-          </div>
-          </div>
+            </div>
+            <div className="form-group text-center" >
+            <label htmlFor='password' style={{ color: "blue" }}>
+                Password
+                <Field type="password" id="password" className="form-control" name = "password"   style={{padding:"15px"}}/>
+                {/* {errors.password && touched.password ? (
+                <div>{errors.password }  </div>
+                ) : null} */}
+                <ErrorMessage name="password" style={{color:"red"}} component="div"/>
+  
+                </label>
+            </div>
+  
+            {/* <ErrorMessage name="name" style={{color:"red"}} component="div" /> */}
+  
+            <div className="form-group text-center" style={{padding:"20px"}}>
           
-             
-        </Form>       
-       
-    </Formik>
+  
+  
+            <button type="submit" className="btn btn-primary" >Add Employee</button>
+            <ErrorMessage name="submitError" style={{color:"red"}} component="div" />
+            </div>
+            </div>
+            
+               
+          </Form>       
+         
+      </Formik>
+      </div>
     </div>
+
+    )}
+  <div>
+    {loading?(<LoadingComponent/>):(<div>{
+      <div>
+         {success && <SuccessComponent onClose={handleSuccess}/>}
+         {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
+         </div>
+      }
+      </div>)}
   </div>
-  )}
-  {success && <SuccessComponent onClose={handleSuccess}/>}
-  {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
+
+ 
+      
+
   </>
 );
 

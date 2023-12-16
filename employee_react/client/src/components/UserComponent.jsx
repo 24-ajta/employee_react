@@ -280,9 +280,7 @@ function UserComponent() {
   }, [currentPage, pageSize,loading]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-  
-    
+    setCurrentPage(page); 
   };
 
   const renderPageNumbers = () => {

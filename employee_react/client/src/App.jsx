@@ -9,6 +9,7 @@ import NavigationComponent from './components/NavigationComponent';
 import SuccessComponent from './components/SuccessComponent';
 import ErrorComponent from './components/ErrorComponent';
 import LoadingComponent from './components/LoadingComponent';
+import AdminComponent from './components/AdminComponent';
 function App() {
  return (
 <>
@@ -22,6 +23,7 @@ function App() {
 {/* <SuccessComponent/> */}
 {/* <ErrorComponent/> */}
 {/* <LoadingComponent/> */}
+{/* <AdminComponent/> */}
 </>
  )
 

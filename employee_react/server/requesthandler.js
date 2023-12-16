@@ -6,6 +6,7 @@ import { successfunction } from "./utils/responsehandler.js";
 import { errorfunction } from "./utils/responsehandler.js";
 import registereduservalidation from "./validation/registervalid.js";
 import updateuservalidation from "./validation/updateuservalidation.js";
+import adminSchema from "./model/admin.schema.js";
 
 const { sign } = jwt;
 
@@ -197,37 +198,37 @@ export async function deletedata(req,res){
 }
 
 
-// export async function login(req, res) {
-//     try {
-//         let { name, password } = req.body;
-//         // if( username.length < 4 && password.length < 4) {
-//         //     return res.json("Invalid username or password");
-//         // }
-//         let user = await userSchema.findOne({ name });
-//         if(!user) {
-//             return res.status(400).send("Invalid username or password");
-//         }
-//         let passCheck = await bcrypt.compare(password, user.password);
-//         if(passCheck) {
-//             let token = await sign({
-//                 name: user.name,
-//                 id: user._id
-//             },
-//             process.env.SECRET_KEY,
-//             {
-//                 expiresIn: "24h"
-//             })
-//             return res.status(200).json({
-//                 msg: "Login successful...",
-//                 token: token
-//             })
-//         }
-//         return res.status(403).send("invalid username or password")
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).send("Error");
-//     }
-// }
+export async function login(req, res) {
+    try {
+        let { username, password } = req.body;
+        // if( username.length < 4 && password.length < 4) {
+        //     return res.json("Invalid username or password");
+        // }
+        let user = await adminSchema.findOne({ username });
+        if(!user) {
+            return res.status(400).send("Invalid username or password");
+        }
+        let passCheck = await bcrypt.compare(password, user.password);
+        if(passCheck) {
+            let token = await sign({
+                username: user.username,
+                id: user._id
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: "24h"
+            })
+            return res.status(200).json({
+                msg: "Login successful...",
+                token: token
+            })
+        }
+        return res.status(403).send("invalid username or password")
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error");
+    }
+}
 
 // export async function getprofile(req, res) {
 //     try {

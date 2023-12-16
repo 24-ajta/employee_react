@@ -17,7 +17,9 @@ return(
     </button>
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-      
+      <li className="nav-item ms-2">
+        <Link to="/login" style={{textDecoration:"none",color:"white"}}>Admin Login</Link>
+        </li>
         <li className="nav-item ms-2">
         <Link to="/registration" style={{textDecoration:"none",color:"white"}}>Registration</Link>
         </li>

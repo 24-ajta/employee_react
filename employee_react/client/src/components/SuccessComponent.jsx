@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import './success.css'
+import './success.css';
+import LoadingComponent from './LoadingComponent';
 
-function SuccessComponent({onClose}){
+function SuccessComponent({onClose,message}){
   // const [success,setSuccess] =useState()
+  const [loading,setLoading] = useState(false)
     return (
       <>
-<div id="successcard" className="animated fadeIn">
+      
+              <div id="successcard" className="animated fadeIn">
   <div id="upper-side-success">
     {/*?xml version="1.0" encoding="utf-8"?*/}
     {/* Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  */}
@@ -41,7 +44,7 @@ function SuccessComponent({onClose}){
   </div>
   <div id="lower-side">
     <p id="message">
-      Congratulations, your account has been successfully created.
+      {message}
     </p>
     <p>Add another employee</p>
     <link
@@ -55,6 +58,8 @@ function SuccessComponent({onClose}){
     </button>
   </div>
 </div>
+           
+
 </>
     )
 }
