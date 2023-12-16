@@ -876,16 +876,18 @@ function UpdateComponent() {
   });
   const onDelete = async () => {
     try {
-      // setLoading(true)
+      setLoading(true)
       axios
       .delete(`http://localhost:3000/api/deletedata/${id}`)
       .then((response) => {
         // setData(response.data);
       setDeletedata(response.data.success);
       setValidationMessage(response.data.message);
+      setError(fasle);
       
       });
     } catch (error) {
+      console.log("Reached Catch");
       setError(true);
       setShowform(false);
       console.log("Error in delete",error)
@@ -1063,7 +1065,7 @@ function UpdateComponent() {
   {update && <UpdateSuccessComponent message={validationMessage} onClose={handleupdate}/>}
   {deletedata &&  <DeleteComponent message={validationMessage} onClose={handledelete}/>}
   {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
-  {/* {error && !deletedata && <ErrorComponent onClose={handleError} />} */}
+  {/* {error && !deletedata && <ErrorComponent message={validationMessage} onClose={handleError} />} */}
 </div>
       }
     </div>

@@ -30,4 +30,4 @@ function AdminLoggedinComponent(){
       );
 
 }
-export default function AdminLoggedinComponent;
+export default AdminLoggedinComponent;

@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import userSchema from "./model/user.schema.js";
+import userSchema from "./db/model/user.schema.js";
 import { successfunction } from "./utils/responsehandler.js";
 import { errorfunction } from "./utils/responsehandler.js";
 import registereduservalidation from "./validation/registervalid.js";
 import updateuservalidation from "./validation/updateuservalidation.js";
-import adminSchema from "./model/admin.schema.js";
+import adminSchema from "./db/model/admin.schema.js";
 
 const { sign } = jwt;
 
@@ -169,19 +169,23 @@ export async function deletedata(req,res){
     try {
         const {id} =req.params;
         let userExist = await userSchema.findOne({_id:id,deleted:{$ne:true}});
+        console.log("user exists",userExist);
         if(!userExist){
             let response = errorfunction({statusCode:404,message:"User not found"});
             return res.status(404).send(response)
-        }
+        }else{
+
+        
         let result = await userSchema.updateOne({_id:id},{$set:{deleted:true,deletedAt:new Date}});
         if(result.modifiedCount==1){
             let response = successfunction({statusCode:200,message:"User deleted Successfully"});
             return res.status(200).send(response)
         }else{
             let response=errorfunction({statusCode:500,message:"User deletion Failed!"});
-            return res.status(404).send(response)
+            return res.status(500).send(response)
         }
-        return res.json(result)
+    }
+        // return res.json(result)
         // .then((data)=>{
         //     res.status(200).send(data);
         // })

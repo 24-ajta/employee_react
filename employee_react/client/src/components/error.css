@@ -11,7 +11,7 @@
     font-family: 'Source Sans Pro', sans-serif;
   }
   
-  #upper-side {
+  #upper-sideerror {
     padding: 2em;
     background-color: red;
     display: block;
@@ -36,7 +36,7 @@
     margin-bottom: 0;
   }
   
-  #lower-side {
+  #lower-sideerrro {
     padding: 2em 2em 5em 2em;
     background: #fff;
     display: block;
@@ -44,7 +44,7 @@
     border-bottom-left-radius: 8px;
   }
   
-  #message {
+  #errormessage {
     margin-top: -.5em;
     color: #757575;
     letter-spacing: 1px;

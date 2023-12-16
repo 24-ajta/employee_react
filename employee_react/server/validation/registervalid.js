@@ -1,4 +1,4 @@
-import userSchema from "../model/user.schema.js";
+import userSchema from "../db/model/user.schema.js";
 import isEmpty from "./isEmpty.js";
 import validator from "validator";
 

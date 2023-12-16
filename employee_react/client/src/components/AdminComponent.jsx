@@ -31,6 +31,7 @@ const handleSubmit=async(values,{setErrors,resetForm})=>{
     try {
     //   setLoading(true)
       console.log("Before Axios")
+      const {token} = response.data
     //   const response= await axios.post(`http://localhost:3000/api/admin`,values);
       console.log("After Axios");
       console.log("Form Submitted",response.data);

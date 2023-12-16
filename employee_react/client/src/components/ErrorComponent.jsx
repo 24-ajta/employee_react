@@ -7,7 +7,7 @@ function ErrorComponent({onClose, message}){
     return (
       <>
 <div id="card" className="animated fadeIn">
-  <div id="upper-side">
+  <div id="upper-sideerror">
     {/*?xml version="1.0" encoding="utf-8"?*/}
     {/* Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  */}
     <svg
@@ -44,8 +44,8 @@ function ErrorComponent({onClose, message}){
 
     <h3 id="status">Oops!</h3>
   </div>
-  <div id="lower-side">
-    <p id="message">
+  <div id="lower-sideerror">
+    <p id="errormessage">
       {message}
     </p>
     <button id="contBtn" onClick={onClose}>
