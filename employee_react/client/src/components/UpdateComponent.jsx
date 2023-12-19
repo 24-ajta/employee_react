@@ -816,264 +816,344 @@ import { useParams, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import UpdateSuccessComponent from "./UpdateSuccessComponent";
 import DeleteComponent from "./DeleteComponent";
 import ErrorComponent from "./ErrorComponent";
 import LoadingComponent from "./LoadingComponent";
+import SuccessComponent from "./SuccessComponent";
 
 function UpdateComponent() {
   const { id } = useParams("");
-  console.log("id",id)
+  console.log("id", id);
   const [editData, setEditData] = useState({});
-  const [update,setUpdate] =useState(null);
-  const [deletedata,setDeletedata]=useState(false);
-  const [error,setError] = useState(false);
-  const [showform,setShowform] = useState(true);
-  const [validationMessage,setValidationMessage]=useState();
-  const [backendErrors,setBackendErrors] = useState({});
-  const [loading,setLoading] = useState(true);
-
+  const [success, setSuccess] = useState(false);
+  const [deletedata, setDeletedata] = useState(false);
+  const [error, setError] = useState(false);
+  const [showform, setShowform] = useState(true);
+  const [validationMessage, setValidationMessage] = useState();
+  const [backendErrors, setBackendErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getDetails();
   }, [loading]);
 
-  const handleupdate=()=>{
-    setUpdate(false);
+  const handleupdate = () => {
+    setSuccess(false);
     setShowform(true);
-    setLoading(true)
-  }
-  const handledelete=()=>{
+    setLoading(true);
+  };
+  const handledelete = () => {
     setDeletedata(false);
-  }
-  const handleError=()=>{
+  };
+  const handleError = () => {
     setError(false);
-  }
+  };
   const getDetails = async () => {
     try {
-      
-      const response = await axios.get(`http://localhost:3000/api/profile/${id}`);
-      formik.setValues(response.data.data)
+      const response = await axios.get(
+        `http://localhost:3000/api/profile/${id}`
+      );
+      formik.setValues(response.data.data);
       setEditData(response.data.data);
-      
-      // setSuccess(response.data.success);
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      if (error.response && error.response.status === 404) {
+        console.log("User not found");
+        setDeletedata(true);
+      } else {
+        console.error("Error fetching user details:", error);
+        setError(true);
+      }
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.delete(
+        `http://localhost:3000/api/deletedata/${id}`
+      );
+      if (response.data.success) {
+        setDeletedata(true);
+        setValidationMessage(response.data.message);
+      } else {
+        setError(true);
+      }
+      setSuccess(false);
+    } catch (error) {
       setError(true);
-    }finally{
-      setTimeout(()=>{
-        setLoading(false)
-      },300)
+      console.log("Error in delete", error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
   };
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
+    name: Yup.string()
+      .min(2, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Required"),
     email: Yup.string().email("Invalid email").required("Required"),
     place: Yup.string().min(2, "Invalid Address").required("Required"),
     designation: Yup.string().required("Required"),
-    contact: Yup.string().matches(/^[6-9]\d{9}$/, "Please enter a valid phone number.").required("Required"),
+    contact: Yup.string()
+      .matches(/^[6-9]\d{9}$/, "Please enter a valid phone number.")
+      .required("Required"),
   });
-  const onDelete = async () => {
-    try {
-      setLoading(true)
-      axios
-      .delete(`http://localhost:3000/api/deletedata/${id}`)
-      .then((response) => {
-        // setData(response.data);
-      setDeletedata(response.data.success);
-      setValidationMessage(response.data.message);
-      setError(fasle);
-      
-      });
-    } catch (error) {
-      console.log("Reached Catch");
-      setError(true);
-      setShowform(false);
-      console.log("Error in delete",error)
-    }finally{
-      setTimeout(() => {
-        setLoading(false)
-      }, 300);
-    }
-    
-  };
+
   const formik = useFormik({
     initialValues: {
-      name: editData.name || '',
-      email: editData.email || '',
-      place: editData.place || '',
-      designation: editData.designation || '',
-      contact: editData.contact || '',
+      name: editData.name || "",
+      email: editData.email || "",
+      place: editData.place || "",
+      designation: editData.designation || "",
+      contact: editData.contact || "",
     },
     validationSchema,
-    onSubmit: async(values,{setErrors,resetForm}) => {
+    onSubmit: async (values, { setErrors, resetForm }) => {
       try {
-        setLoading(true)
-        const response = await axios.put(`http://localhost:3000/api/update/${id}`, values);
+        setLoading(true);
+        const response = await axios.put(
+          `http://localhost:3000/api/update/${id}`,
+          values
+        );
         console.log("Form Submitted", response.data.data);
-        if(response.data.errors){
+        if (response.data.errors) {
           setBackendErrors(response.data.errors);
-          setErrors(response.data.errors); 
+          setErrors(response.data.errors);
           setValidationMessage(response.data.message);
           setError(true);
-          setUpdate(false);
-        }else if(response.data.success){
-          setUpdate(true);
+          setSuccess(false);
+        } else if (response.data.success) {
+          setSuccess(true);
           setShowform(false);
           setValidationMessage(response.data.message);
         }
         resetForm();
-      }catch (error) {
+      } catch (error) {
         console.error("Error submitting form:", error);
         setError(true);
-      }finally{
-        setTimeout(()=>{
+      } finally {
+        setTimeout(() => {
           setLoading(false);
-        },2000)
+        }, 2000);
       }
     },
   });
 
-  // const onDelete = async () => {
-  //   try {
-  //     const response = await axios.delete(`http://localhost:3000/api/deletedata/${id}`);
-  //     if (response.data.success) {
-  //       setDeletedata(true); 
-  //       setError(false); 
-  //     } else {
-  //       setError(true); 
-  //     }
-  //   } catch (error) {
-  //     setError(true);
-  //     setDeletedata(false) 
-  //     console.log("Error in delete", error);
-  //   }
-  // };
-  
-  
-
-
- 
-  
-
   return (
     <>
-      <div>{loading?(<LoadingComponent/>):(<div>
-      {
-        <div>
-{showform && (
-  <div>
-  <h1 style={{ textAlign: "center" }}>Details</h1><div className="container">
-      <form onSubmit={formik.handleSubmit} className="mt-5">
-        {/* Form fields */}
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          <label htmlFor="name" style={{ color: "blue" }}>
-            Name
-            <input
-              className="form-control border border-primary"
-              type="text"
-              name="name"
-              {...formik.getFieldProps("name")} />
-            {formik.touched.name && formik.errors.name && (
-              <div style={{ color: "red" }}>{formik.errors.name}</div>
-            )}
-            {backendErrors.name_empty && <div>{backendErrors.name_empty}</div>}
-            {backendErrors.name && <div>{backendErrors.name}</div>}
-          </label>
-        </div>
+      <div>
+        {loading ? (
+          <LoadingComponent />
+        ) : (
+          <div>
+            {
+              <div>
+                {showform && (
+                  <div>
+                    <h1 style={{ textAlign: "center" }}>Details</h1>
+                    <div className="container">
+                      <form onSubmit={formik.handleSubmit} className="mt-5">
+                        {/* Form fields */}
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          <label htmlFor="name" style={{ color: "blue" }}>
+                            Name
+                            <input
+                              className="form-control border border-primary"
+                              type="text"
+                              name="name"
+                              {...formik.getFieldProps("name")}
+                            />
+                            {formik.touched.name && formik.errors.name && (
+                              <div style={{ color: "red" }}>
+                                {formik.errors.name}
+                              </div>
+                            )}
+                            {backendErrors.name_empty && (
+                              <div>{backendErrors.name_empty}</div>
+                            )}
+                            {backendErrors.name && (
+                              <div>{backendErrors.name}</div>
+                            )}
+                          </label>
+                        </div>
 
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          <label htmlFor="email" style={{ color: "blue" }}>
-            Email
-            <input
-              className="form-control border border-primary"
-              type="email"
-              name="email"
-              {...formik.getFieldProps("email")} />
-            {formik.touched.email && formik.errors.email && (
-              <div style={{ color: "red" }}>{formik.errors.email}</div>
-            )}
-          {backendErrors.email_empty && <div>{backendErrors.email_empty}</div>}
-          {backendErrors.email && <div>{backendErrors.email}</div>}
-          {backendErrors.email_invalid && <div>{backendErrors.email_invalid}</div>}
-          {backendErrors.email_exist && <div>{backendErrors.email_exist}</div>}
-          </label>
-        </div>
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          <label htmlFor="place" style={{ color: "blue" }}>
-            Place
-            <input
-              className="form-control border border-primary"
-              type="text"
-              name="place"
-              {...formik.getFieldProps("place")} />
-            {formik.touched.place && formik.errors.place && (
-              <div style={{ color: "red" }}>{formik.errors.place}</div>
-            )}
-            {backendErrors.place_empty && <div>{backendErrors.place_empty}</div>}
-            {backendErrors.place && <div>{backendErrors.place}</div>}
-          </label>
-        </div>
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          <label htmlFor="designation" style={{ color: "blue" }}>
-            Work
-            <input
-              className="form-control border border-primary"
-              type="text"
-              name="designation"
-              {...formik.getFieldProps("designation")} />
-            {formik.touched.designation && formik.errors.designation && (
-              <div style={{ color: "red" }}>{formik.errors.designation}</div>
-            )}
-            {backendErrors.designation_empty && <div>{backendErrors.designation_empty}</div>}
-          </label>
-        </div>
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          <label htmlFor="contact" style={{ color: "blue" }}>
-            Contact
-            <input
-              className="form-control border border-primary"
-              type="text"
-              name="contact"
-              {...formik.getFieldProps("contact")} />
-            {formik.touched.contact && formik.errors.contact && (
-              <div style={{ color: "red" }}>{formik.errors.contact}</div>
-            )}
-            {backendErrors.contact_empty && <div>{backendErrors.contact_empty}</div>}
-            {backendErrors.contact && <div>{backendErrors.contact}</div>}
-          </label>
-        </div>
-        {/* ... Other form fields */}
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          <button type="submit" className="btn btn-primary" style={{ color: "white" }}>
-            Update Details
-          </button>
-        </div>
-        <div className="form-group text-center" style={{ padding: "20px" }}>
-          {/* <Link to="/view"> */}
-          <button className="btn btn-primary" type="button" onClick={onDelete}>
-            Delete
-          </button>
-          {/* </Link> */}
-        </div>
-      </form>
-    </div>
-    </div>
-  )}
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          <label htmlFor="email" style={{ color: "blue" }}>
+                            Email
+                            <input
+                              className="form-control border border-primary"
+                              type="email"
+                              name="email"
+                              {...formik.getFieldProps("email")}
+                            />
+                            {formik.touched.email && formik.errors.email && (
+                              <div style={{ color: "red" }}>
+                                {formik.errors.email}
+                              </div>
+                            )}
+                            {backendErrors.email_empty && (
+                              <div>{backendErrors.email_empty}</div>
+                            )}
+                            {backendErrors.email && (
+                              <div>{backendErrors.email}</div>
+                            )}
+                            {backendErrors.email_invalid && (
+                              <div>{backendErrors.email_invalid}</div>
+                            )}
+                            {backendErrors.email_exist && (
+                              <div>{backendErrors.email_exist}</div>
+                            )}
+                          </label>
+                        </div>
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          <label htmlFor="place" style={{ color: "blue" }}>
+                            Place
+                            <input
+                              className="form-control border border-primary"
+                              type="text"
+                              name="place"
+                              {...formik.getFieldProps("place")}
+                            />
+                            {formik.touched.place && formik.errors.place && (
+                              <div style={{ color: "red" }}>
+                                {formik.errors.place}
+                              </div>
+                            )}
+                            {backendErrors.place_empty && (
+                              <div>{backendErrors.place_empty}</div>
+                            )}
+                            {backendErrors.place && (
+                              <div>{backendErrors.place}</div>
+                            )}
+                          </label>
+                        </div>
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          <label
+                            htmlFor="designation"
+                            style={{ color: "blue" }}
+                          >
+                            Work
+                            <input
+                              className="form-control border border-primary"
+                              type="text"
+                              name="designation"
+                              {...formik.getFieldProps("designation")}
+                            />
+                            {formik.touched.designation &&
+                              formik.errors.designation && (
+                                <div style={{ color: "red" }}>
+                                  {formik.errors.designation}
+                                </div>
+                              )}
+                            {backendErrors.designation_empty && (
+                              <div>{backendErrors.designation_empty}</div>
+                            )}
+                          </label>
+                        </div>
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          <label htmlFor="contact" style={{ color: "blue" }}>
+                            Contact
+                            <input
+                              className="form-control border border-primary"
+                              type="text"
+                              name="contact"
+                              {...formik.getFieldProps("contact")}
+                            />
+                            {formik.touched.contact &&
+                              formik.errors.contact && (
+                                <div style={{ color: "red" }}>
+                                  {formik.errors.contact}
+                                </div>
+                              )}
+                            {backendErrors.contact_empty && (
+                              <div>{backendErrors.contact_empty}</div>
+                            )}
+                            {backendErrors.contact && (
+                              <div>{backendErrors.contact}</div>
+                            )}
+                          </label>
+                        </div>
+                        {/* ... Other form fields */}
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          <button
+                            type="submit"
+                            className="btn btn-primary"
+                            style={{ color: "white" }}
+                          >
+                            Update Details
+                          </button>
+                        </div>
+                        <div
+                          className="form-group text-center"
+                          style={{ padding: "20px" }}
+                        >
+                          {/* <Link to="/view"> */}
+                          <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={onDelete}
+                          >
+                            Delete
+                          </button>
+                          {/* </Link> */}
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
 
-  {update && <UpdateSuccessComponent message={validationMessage} onClose={handleupdate}/>}
-  {deletedata &&  <DeleteComponent message={validationMessage} onClose={handledelete}/>}
-  {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
-  {/* {error && !deletedata && <ErrorComponent message={validationMessage} onClose={handleError} />} */}
-</div>
-      }
-    </div>
-    )}
-    </div>
-      
+                {success && (
+                  <SuccessComponent
+                    message={validationMessage}
+                    onClose={handleupdate}
+                  />
+                )}
+                {deletedata && (
+                  <DeleteComponent
+                    message={validationMessage}
+                    onClose={handledelete}
+                  />
+                )}
+                {error && (
+                  <ErrorComponent
+                    message={validationMessage}
+                    onClose={handleError}
+                  />
+                )}
+                {/* {error && !deletedata && <ErrorComponent onClose={handleError} />} */}
+              </div>
+            }
+          </div>
+        )}
+      </div>
     </>
   );
 }
 
 export default UpdateComponent;
+
