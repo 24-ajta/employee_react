@@ -46,7 +46,7 @@ function SuccessComponent({onClose,message}){
     <p id="message">
       {message}
     </p>
-    <p>Add another employee</p>
+    {/* <p>Add another employee</p> */}
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"

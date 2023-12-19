@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import userSchema from "./db/model/user.schema.js";
+import userSchema from "./db/models/user.schema.js";
 import { successfunction } from "./utils/responsehandler.js";
 import { errorfunction } from "./utils/responsehandler.js";
 import registereduservalidation from "./validation/registervalid.js";
 import updateuservalidation from "./validation/updateuservalidation.js";
-import adminSchema from "./db/model/admin.schema.js";
+import adminSchema from "./db/models/admin.schema.js";
 
 const { sign } = jwt;
 
