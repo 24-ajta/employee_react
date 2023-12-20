@@ -12,11 +12,15 @@ function AdminComponent(){
     const [backendErrors,setBackendErrors] = useState({});
 
     const initialValues={
-        username:'',
-        email:''
+        name:'',
+        email:'',
+        place:'',
+        designation:'',
+        contact:'',
+        password:''
        };
 const SignupSchema = Yup.object().shape({
-        username: Yup.string()
+        name: Yup.string()
           .min(2, 'Too Short!')
           .max(50, 'Too Long!')
           .required('Required'),
@@ -66,14 +70,62 @@ return (
             <div className=" shadow-lg  bg-body rounded ">
             <div className="form-group text-center " >
             <label htmlFor='name' style={{ color: "blue" }}>
-                Username
-                <Field type="text" id="username"  name = "username" className="form-control" style={{padding:"15px"}} />
+                Name
+                <Field type="text" id="name"  name = "name" className="form-control" style={{padding:"15px"}} />
                 {/* {errors.name && touched.name ? (
                 <div>{errors.name }  </div>
                 ) : null} */}
-                <ErrorMessage name="username" style={{color:"red"}} component="div"/>
-                {backendErrors.username_empty && <div>{backendErrors.username_empty}</div>}
-                {backendErrors.username && <div>{backendErrors.username}</div>}
+                <ErrorMessage name="name" style={{color:"red"}} component="div"/>
+                {backendErrors.name_empty && <div>{backendErrors.name_empty}</div>}
+                {backendErrors.name && <div>{backendErrors.name}</div>}
+                </label>
+            </div>
+            <div className="form-group text-center " >
+            <label htmlFor='email' style={{ color: "blue" }}>
+                Email
+                <Field type="text" id="email"  name = "email" className="form-control" style={{padding:"15px"}} />
+                {/* {errors.name && touched.name ? (
+                <div>{errors.name }  </div>
+                ) : null} */}
+                <ErrorMessage name="email" style={{color:"red"}} component="div"/>
+                {backendErrors.email_empty && <div>{backendErrors.email_empty}</div>}
+                {backendErrors.email && <div>{backendErrors.email}</div>}
+                </label>
+            </div>
+            <div className="form-group text-center " >
+            <label htmlFor='place' style={{ color: "blue" }}>
+            Place
+                <Field type="text" id="place"  name = "place" className="form-control" style={{padding:"15px"}} />
+                {/* {errors.name && touched.name ? (
+                <div>{errors.name }  </div>
+                ) : null} */}
+                <ErrorMessage name="place" style={{color:"red"}} component="div"/>
+                {backendErrors.place_empty && <div>{backendErrors.place_empty}</div>}
+                {backendErrors.place && <div>{backendErrors.place}</div>}
+                </label>
+            </div>
+            <div className="form-group text-center " >
+            <label htmlFor='designation' style={{ color: "blue" }}>
+                Work
+                <Field type="text" id="designation"  name = "designation" className="form-control" style={{padding:"15px"}} />
+                {/* {errors.name && touched.name ? (
+                <div>{errors.name }  </div>
+                ) : null} */}
+                <ErrorMessage name="designation" style={{color:"red"}} component="div"/>
+                {backendErrors.designation_empty && <div>{backendErrors.designation_empty}</div>}
+                {/* {backendErrors.username && <div>{backendErrors.username}</div>} */}
+                </label>
+            </div>
+            <div className="form-group text-center " >
+            <label htmlFor='contact' style={{ color: "blue" }}>
+            Contact
+                <Field type="text" id="contact"  name = "contact" className="form-control" style={{padding:"15px"}} />
+                {/* {errors.name && touched.name ? (
+                <div>{errors.name }  </div>
+                ) : null} */}
+                <ErrorMessage name="contact" style={{color:"red"}} component="div"/>
+                {backendErrors.contact_empty && <div>{backendErrors.contact_empty}</div>}
+                {/* {backendErrors.username && <div>{backendErrors.username}</div>} */}
                 </label>
             </div>
             <div className="form-group text-center " >

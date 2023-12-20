@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const userSchema = require("./db/models/user.schema.js");
+const user_types = require("./db/models/usertype.schema.js");
 const { successfunction } = require("./utils/responsehandler.js");
 const { errorfunction } = require("./utils/responsehandler.js");
 const registereduservalidation = require("./validation/registervalid.js");

@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 
-let User;
+// let User;
+const users = new mongoose.Schema(
 
-try {
-  // Try to retrieve the existing model to prevent redefining it
-  User = mongoose.model('User');
-} catch {
-  // Define the model if it doesn't exist
-  const schema = new mongoose.Schema({
+{ 
+
     name: {
         type: String,
         required: true,
@@ -34,6 +31,10 @@ try {
         type: String,
         required: true,
       },
+      user_type:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"user_types"
+      },
       deleted: {
         type: Boolean,
       },
@@ -44,7 +45,6 @@ try {
     timestamps: true,
   });
 
-  User = mongoose.model('User', schema);
-}
 
-module.exports = User;
+
+module.exports = mongoose.model("users",users);

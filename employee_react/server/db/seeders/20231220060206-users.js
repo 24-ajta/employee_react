@@ -3,10 +3,9 @@ const { models } = require('../models/index.js');
 module.exports = {
   up: async () => {
     try {
-      // Check if the models object contains the 'User' model
-      if ('User' in models) {
-        const User = models.User;
-        const inserted = await User.insertMany([
+      if ('users' in models) {
+        const users = models.users;
+        const inserted = await users.insertMany([
           {
             _id: "6582b1b50fb67833f9ac813a",
             name: "Anjitha",
@@ -14,17 +13,10 @@ module.exports = {
             place: "Pandalam",
             designation: "Admin1",
             contact: "8778998989",
-            password: "Anjitha123@1"
+            password: "$2y$10$Fa1C5GP9MkXv8gxfA7yLq.KvXXonnF1qOQuDUcQyRXOgelV3cE1FS",//password:Admin#123
+            user_type:"6582cb2380ef6fd3df47947b"
           },
-          {
-            _id: "6582b5ad0fb67833f9ac8141",
-            name: "Anjitha Nair",
-            email: "anjithanair@gmail.com",
-            place: "Pandalam",
-            designation: "Admin2",
-            contact: "8778998989",
-            password: "Anjitha123@2"
-          },
+          
         ]);
         console.log(inserted.length + ' documents inserted');
       } else {
@@ -38,11 +30,10 @@ module.exports = {
 
   down: async () => {
     try {
-      // Check if the models object contains the 'User' model
-      if ('User' in models) {
-        const User = models.User;
-        const deleted = await User.deleteMany({
-          _id: { $in: ["6582b1b50fb67833f9ac813a", "6582b5ad0fb67833f9ac8141"] }
+      if ('users' in models) {
+        const users = models.users;
+        const deleted = await users.deleteMany({
+          _id: { $in: ["6582b1b50fb67833f9ac813a", ] }
         });
         console.log(deleted.deletedCount + ' documents deleted');
       } else {
