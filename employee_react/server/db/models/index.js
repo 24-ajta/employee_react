@@ -1,40 +1,40 @@
 const fs = require('fs');
 const path = require('path');
-const Mongoose = require('mongoose');
+const mongoose = require('mongoose');
+
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
-// const config = require('../config/config.js');
-// import { config } from '../config/config';
+const config = require(path.resolve(__dirname, '../config/config.js'))[env];
 
-console.log("config.development.database.url: ",config);
 if (config.database.url) {
-  Mongoose.connect(config.database.url, config.database.options);
+  mongoose.connect(config.database.url, config.database.options);
 } else if (config.database.config.dbName) {
-  Mongoose.connect(`${config.database.protocol}://${config.database.username}:${config.database.password}@${config.database.host}:${config.database.port}`, config.database.options);
+  mongoose.connect(`${config.database.protocol}://${config.database.username}:${config.database.password}@${config.database.host}:${config.database.port}`,
+    config.database.options
+  );
 } else {
-  Mongoose.connect(`${config.database.protocol}://${config.database.username}:${config.database.password}@${config.database.host}:${config.database.port}/${config.database.name}`, config.database.options);
+  mongoose.connect(`${config.database.protocol}://${config.database.username}:${config.database.password}@${config.database.host}:${config.database.port}/${config.database.name}`,
+    config.database.options
+  );
 }
 
 const db = () => {
-  const m = {};
+  const models = {};
 
-  fs
-    .readdirSync(__dirname)
+  fs.readdirSync(__dirname)
     .filter(file => {
       return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
     .forEach(file => {
-      const model = require(path.resolve(__dirname, file))(Mongoose);
-      m[model.modelName] = model;
+      const model = require(path.resolve(__dirname, file));
+      if (model.modelName) {
+        models[model.modelName] = model;
+      }
     });
 
-  return m;
-}
-
+  return models;
+};
 
 const models = db();
-const mongoose = Mongoose;
 
-module.exports = mongoose;
-module.exports.default = models;
+module.exports = { mongoose, models };

@@ -1,17 +1,15 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-import userSchema from "./db/models/user.schema.js";
-import { successfunction } from "./utils/responsehandler.js";
-import { errorfunction } from "./utils/responsehandler.js";
-import registereduservalidation from "./validation/registervalid.js";
-import updateuservalidation from "./validation/updateuservalidation.js";
-import adminSchema from "./db/models/admin.schema.js";
+const userSchema = require("./db/models/user.schema.js");
+const { successfunction } = require("./utils/responsehandler.js");
+const { errorfunction } = require("./utils/responsehandler.js");
+const registereduservalidation = require("./validation/registervalid.js");
+const updateuservalidation = require("./validation/updateuservalidation.js");
 
 const { sign } = jwt;
 
-
-export async function register(req, res) {
+async function register(req, res) {
     try {
         console.log(req.body);
         let {name,email,place,designation,contact,password } = req.body;
@@ -38,7 +36,7 @@ export async function register(req, res) {
     }
 }
 
-export async function listing(req,res){
+async function listing(req,res){
     try {
         let count =Number(await userSchema.countDocuments({deleted:{$ne:true}}));
         const pageNumber = parseInt(req.query.page) || 1;
@@ -111,7 +109,7 @@ export async function listing(req,res){
 //     }
 //   }
   
-export async function profile(req,res){
+async function profile(req,res){
     try {
         // console.log("single user id : ", req.params.id);
         let id=req.params.id;
@@ -130,7 +128,7 @@ export async function profile(req,res){
     }
 }
 
-export async function update(req,res){
+async function update(req,res){
     try {
         console.log("reached update api");
         const {id} =req.params;
@@ -165,7 +163,7 @@ export async function update(req,res){
 }
 
 
-export async function deletedata(req,res){
+async function deletedata(req,res){
     try {
         const {id} =req.params;
         let userExist = await userSchema.findOne({_id:id,deleted:{$ne:true}});
@@ -202,7 +200,7 @@ export async function deletedata(req,res){
 }
 
 
-export async function login(req, res) {
+async function login(req, res) {
     try {
         let { username, password } = req.body;
         // if( username.length < 4 && password.length < 4) {
@@ -233,7 +231,14 @@ export async function login(req, res) {
         res.status(500).send("Error");
     }
 }
-
+module.exports = {
+    register,
+    listing,
+    profile,
+    update,
+    deletedata,
+    login
+};
 // export async function getprofile(req, res) {
 //     try {
 //         let {id} = req.user;

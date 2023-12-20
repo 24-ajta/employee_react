@@ -1,11 +1,10 @@
-
-modules.export= {
+module.exports = {
   "development": {
     "database": {
       "url": "mongodb://127.0.0.1:27017/employee",
       "options": {
         "useNewUrlParser": true,
-        "dbName":process.env.dbName
+        "dbName": process.env.dbName
       }
     }
   },
@@ -14,8 +13,7 @@ modules.export= {
       "url": process.env.DB_URI,
       "options": {
         "useNewUrlParser": true,
-        "dbName":process.env.dbName
-
+        "dbName": process.env.dbName
       }
     }
   },
@@ -24,8 +22,8 @@ modules.export= {
       "url": process.env.DB_URI,
       "options": {
         "useNewUrlParser": true,
-        "dbName":process.env.dbName
+        "dbName": process.env.dbName
       }
     }
   }
-}
+};

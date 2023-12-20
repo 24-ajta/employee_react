@@ -1,7 +1,6 @@
-import userSchema from "../db/models/user.schema.js";
-import isEmpty from "./isEmpty.js";
-import validator from "validator";
-
+const userSchema = require("../db/models/user.schema.js");
+const isEmpty = require("./isEmpty.js");
+const validator = require("validator");
 
 async function registereduservalidation(data){
 
@@ -76,4 +75,5 @@ return {
 
 
 }
-export default registereduservalidation;
+
+module.exports = registereduservalidation;

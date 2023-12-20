@@ -1,6 +1,6 @@
-import isEmpty from "./isEmpty.js";
-import validator from "validator";
-import userSchema from "../db/models/user.schema.js";
+const isEmpty = require("./isEmpty.js");
+const validator = require("validator");
+const userSchema = require("../db/models/user.schema.js");
 
 async function updateuservalidation(data){
     let errors={}
@@ -82,4 +82,4 @@ async function updateuservalidation(data){
     };
     
 }
-export default updateuservalidation;
+module.exports = updateuservalidation;
