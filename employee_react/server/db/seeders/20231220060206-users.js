@@ -13,9 +13,10 @@ module.exports = {
             place: "Pandalam",
             designation: "Admin1",
             contact: "8778998989",
-            password: "$2y$10$Fa1C5GP9MkXv8gxfA7yLq.KvXXonnF1qOQuDUcQyRXOgelV3cE1FS",//password:Admin#123
+            password: "$2y$10$rrlH8HEkcnvANO16l5mbtu4DjiIE3vTyNcQYgtjLOSvp8U8ZnVnP6",
             user_type:"6582cb2380ef6fd3df47947b"
           },
+          //password:Admin#123
           
         ]);
         console.log(inserted.length + ' documents inserted');
@@ -46,39 +47,3 @@ module.exports = {
   },  
 };
 
-// module.exports = {
-//   up: (models, mongoose) => {
-//     const User = models.User;
-//     return models.User
-//       .insertMany([
-//         {
-//           _id: "6582b1b50fb67833f9ac813a",
-//             name: "Anjitha Nair",
-//             email: "anjithanair@gmail.com",
-//             place: "Pandalam",
-//             designation: "Admin",
-//             contact: "8778998989",
-//             password: "Anjitha123@"
-//         },
-//       ])
-//       .then((res) => {
-//         // Prints "1"
-//         console.log("insrtedcdata",res.insertedCount);
-//       });
-//   },
-
-//   down: (models, mongoose) => {
-//     const User = models.User;
-//     return models.User
-//       .deleteMany({
-//         _id: {
-//           $in: [
-//              "6582b1b50fb67833f9ac813a",
-//           ],
-//         },
-//       })
-//       .then((res) => {
-//         console.log("deleteddata",res.deletedCount);
-//       });
-//   },
-// };

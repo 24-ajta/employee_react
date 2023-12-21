@@ -10,8 +10,6 @@ const app = express();
 
 app.use(cors({
     orgin: 'http://localhost:3000'
-   
-    // Add other necessary configurations
 }));
 
 
