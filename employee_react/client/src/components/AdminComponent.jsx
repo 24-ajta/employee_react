@@ -2,12 +2,27 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import SuccessComponent from "./SuccessComponent";
+import ErrorComponent from "./ErrorComponent";
+import LoadingComponent from "./LoadingComponent";
 
 function AdminComponent() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [validationMessage, setValidationMessage] = useState('');
   const [backendErrors, setBackendErrors] = useState({});
+  const [showform,setShowform] = useState(true);
+  const [loading,setLoading] = useState();
+
+
+  const handleSuccess = () => {
+    setSuccess(false); 
+    setShowform(true);
+  };
+  
+  const handleError=()=>{
+    setError(false);
+  }
 
   const initialValues = {
     email: '',
@@ -37,6 +52,7 @@ function AdminComponent() {
         setSuccess(false);
       } else if (response.data.success) {
         setSuccess(true);
+        setShowform(false);
         // Handle successful login action or redirect to a new page
       }
       resetForm();
@@ -47,6 +63,8 @@ function AdminComponent() {
   };
 
   return (
+    <>
+    {showform && (
     <div>
       <h1 style={{ textAlign: "center", color: "blue" }}>Admin login</h1>
       <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
@@ -79,6 +97,17 @@ function AdminComponent() {
         </Formik>
       </div>
     </div>
+    )}
+      <div>
+    {loading?(<LoadingComponent/>):(<div>{
+      <div>
+         {success && <SuccessComponent onClose={handleSuccess}/>}
+         {error && <ErrorComponent message={validationMessage} onClose={handleError}/>}
+         </div>
+      }
+      </div>)}
+  </div>
+    </>
   );
 }
 

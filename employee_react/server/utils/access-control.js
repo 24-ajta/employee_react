@@ -33,6 +33,7 @@ exports.accessControl = async function(access_types,req,res,next){
                                 statusCode:401,
                                 message:err.message,
                             });
+                            res.status(401).send(response);
                         } else {
                             let allowed = access_types
                             .split(",")

@@ -1,5 +1,5 @@
-const successfunction = require("../utils/responsehandler");
-const errorfunction = require("../utils/responsehandler");
+const successfunction = require("../utils/responsehandler").successfunction;
+const errorfunction = require("../utils/responsehandler").errorfunction;
 const users = require("../db/models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
