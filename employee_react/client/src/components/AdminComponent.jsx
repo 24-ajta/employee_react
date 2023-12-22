@@ -27,7 +27,7 @@ function AdminComponent() {
 
   const handleSubmit = async (values, { setErrors, resetForm }) => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/login`, values);
+      const response = await axios.post(`http://localhost:3000/login`, values);
 
       if (response.data.errors) {
         setBackendErrors(response.data.errors);

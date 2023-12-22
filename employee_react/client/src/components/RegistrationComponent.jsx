@@ -346,7 +346,7 @@ const RegistrationComponent=()=>{
   try {
     setLoading(true)
     console.log("Before Axios")
-    const response= await axios.post(`http://localhost:3000/api/register`,values);
+    const response= await axios.post(`http://localhost:3000/register`,values);
     console.log("After Axios");
     console.log("Form Submitted",response.data);
 

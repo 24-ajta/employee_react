@@ -851,7 +851,7 @@ function UpdateComponent() {
   const getDetails = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/profile/${id}`
+        `http://localhost:3000/profile/${id}`
       );
       formik.setValues(response.data.data);
       setEditData(response.data.data);
@@ -874,7 +874,7 @@ function UpdateComponent() {
     try {
       setLoading(true);
       const response = await axios.delete(
-        `http://localhost:3000/api/deletedata/${id}`
+        `http://localhost:3000/deletedata/${id}`
       );
       if (response.data.success) {
         setDeletedata(true);
@@ -919,7 +919,7 @@ function UpdateComponent() {
       try {
         setLoading(true);
         const response = await axios.put(
-          `http://localhost:3000/api/update/${id}`,
+          `http://localhost:3000/update/${id}`,
           values
         );
         console.log("Form Submitted", response.data.data);

@@ -258,7 +258,7 @@ function UserComponent() {
   const fetchData = () => {
     try {
       axios
-      .get(`http://localhost:3000/api/listing?page=${currentPage}&pageSize=${pageSize}`)
+      .get(`http://localhost:3000/listing?page=${currentPage}&pageSize=${pageSize}`)
       .then((response) => {
         setData(response.data.data.datas || []);
         setTotalPages(response.data.data.totalpages || 0);

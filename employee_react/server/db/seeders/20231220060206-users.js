@@ -13,7 +13,7 @@ module.exports = {
             place: "Pandalam",
             designation: "Admin1",
             contact: "8778998989",
-            password: "$2y$10$rrlH8HEkcnvANO16l5mbtu4DjiIE3vTyNcQYgtjLOSvp8U8ZnVnP6",
+            password: "$2a$10$DjYVa85gdNbWQPkutS8pcOaUY2TPpi4tnhOH9fWF1Vkh5QvJFTRuC",
             user_type:"6582cb2380ef6fd3df47947b"
           },
           //password:Admin#123

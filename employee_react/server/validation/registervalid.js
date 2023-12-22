@@ -1,4 +1,4 @@
-const userSchema = require("../db/models/user.schema.js");
+const users = require("../db/models/users.js");
 const isEmpty = require("./isEmpty.js");
 const validator = require("validator");
 
@@ -27,7 +27,7 @@ if(validator.isEmpty(data.email)){
     errors.email_empty="Email is Required";
 }
 
-let email_count=await userSchema.countDocuments({
+let email_count=await users.countDocuments({
     "email":data.email,deleted:{$ne:true}
 })
 if(email_count>0){

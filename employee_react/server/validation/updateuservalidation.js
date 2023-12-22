@@ -1,6 +1,6 @@
 const isEmpty = require("./isEmpty.js");
 const validator = require("validator");
-const userSchema = require("../db/models/user.schema.js");
+const users = require("../db/models/users.js");
 
 async function updateuservalidation(data){
     let errors={}
@@ -25,7 +25,7 @@ async function updateuservalidation(data){
     //     errors.email_empty="Email is Required";
     // }
     
-    // let email_count=await userSchema.countDocuments({
+    // let email_count=await users.countDocuments({
     //     "email":data.email
     // })
     // if(email_count>0){
@@ -66,7 +66,7 @@ async function updateuservalidation(data){
         }
     
         
-        const emailExistsForOtherUser = await userSchema.findOne({
+        const emailExistsForOtherUser = await users.findOne({
           email: data.email,
           _id: { $ne: data._id }, 
         });
