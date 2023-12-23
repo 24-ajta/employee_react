@@ -16,13 +16,13 @@ return (
 <Router>
         <Routes>
           <Route path="/" element={<NavigationComponent/>}/>
-          <Route path="/login" element={<AdminComponent/>}/>
+          {/* <Route path="/login" element={<AdminComponent/>}/> */}
           <Route path='/registration' element={<RegistrationComponent/>}/>
           <Route path='/view' element={<UserComponent/>}/>
           <Route path='/profile/:id' element={<ProfileComponent/>} />
           <Route path='/update/:id' element={<UpdateComponent/>}/>
         </Routes>
-        </Router>
+</Router>
     
 </>
 )

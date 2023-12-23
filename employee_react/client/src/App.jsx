@@ -10,12 +10,13 @@ import SuccessComponent from './components/SuccessComponent';
 import ErrorComponent from './components/ErrorComponent';
 import LoadingComponent from './components/LoadingComponent';
 import AdminComponent from './components/AdminComponent';
+import HomeComponent from './components/HomeComponent';
 function App() {
  return (
 <>
 {/* <NavigationComponent/> */}
 
-<PageLayoutComponent/>
+{/* <PageLayoutComponent/> */}
 
 {/* <RegistrationComponent/>
 <UserComponent/> */}
@@ -24,6 +25,7 @@ function App() {
 {/* <ErrorComponent/> */}
 {/* <LoadingComponent/> */}
 {/* <AdminComponent/> */}
+<HomeComponent/>
 </>
  )
 

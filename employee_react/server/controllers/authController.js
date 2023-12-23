@@ -103,6 +103,58 @@ async function login(req,res){
     }
   }
 
+async function logout (req,res){
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader.split(" ")[1];
+
+    if(!token) {
+      let response = errorfunction({
+        statusCode:400,
+        message:"Token is required",
+      });
+      res.status(response.statuscode).send(response);
+      return;
+    }
+
+    let isRevoked = await revokeManager.checkRevoked(token);
+
+    if(!isRevoked) {
+      revokeManager.revoke(token)
+      .then((result)=> {
+        let response = successfunction(result);
+        res.status(result.status).send(response);
+        return;
+      });
+    } else {
+      res.status(406).send(
+        errorfunction({
+          statusCode:406,
+          message:"Token already in revoked list",
+        })
+      );
+    }
+  } catch (error) {
+    if(process.env.NODE_ENV == "production") {
+      let response = errorfunction({
+        statusCode:400,
+        message:error
+         ? error.message
+          ? error.message
+          :error
+        : "Something went wrong",
+      });
+      res.status(response.statuscode).send(response);
+      return;
+    } else {
+      let response = errorfunction({statusCode:400,message:error});
+      res.status(response.statuscode).send(response);
+      return;
+    }
+  }
+};
+
 module.exports ={
-    login
+    login,
+    logout,
 }
