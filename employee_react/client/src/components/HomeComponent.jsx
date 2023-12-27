@@ -38,9 +38,18 @@ return (
             Login
           </a>
           <ul className="dropdown-menu">
-          <Link className="dropdown-item" to="/">
+          {/* <Link className="dropdown-item" to="/">
                   Admin
-          </Link>
+          </Link> */}
+          <li>
+              <a className="dropdown-item" href="#">
+              <Link
+                    to="/admin"
+                  >
+                    Admin
+                  </Link>
+              </a>
+            </li>
             <li>
               <a className="dropdown-item" href="#">
                 Employee

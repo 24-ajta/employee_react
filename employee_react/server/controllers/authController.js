@@ -3,7 +3,8 @@ const errorfunction = require("../utils/responsehandler").errorfunction;
 const users = require("../db/models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-// const accessControl = require("../db/models/")
+const revokeManager = require('../managers/revokeManager');
+const accessControl = require("../db/models/revoked_tokens")
 
 
 async function login(req,res){
@@ -102,6 +103,22 @@ async function login(req,res){
       }
     }
   }
+
+  exports.checkRevoked = function (req, res) {
+    return new Promise((resolve, reject) => {
+      const authHeader = req.headers["authorization"];
+      const token = authHeader.split(" ")[1];
+  
+      revokeManager
+        .checkRevoked(token)
+        .then((message) => {
+          resolve(message);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }; 
 
 async function logout (req,res){
   try {

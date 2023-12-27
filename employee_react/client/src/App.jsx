@@ -1,35 +1,33 @@
-
 import './App.css';
-
-// import RegistrationComponent from './components/RegistrationComponent.jsx';
-// import UserComponent from './components/UserComponent';
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PageLayoutComponent from './components/PageLayoutComponent';
-import ProfileComponent from './components/ProfileComponent';
-import NavigationComponent from './components/NavigationComponent';
-import SuccessComponent from './components/SuccessComponent';
-import ErrorComponent from './components/ErrorComponent';
-import LoadingComponent from './components/LoadingComponent';
 import AdminComponent from './components/AdminComponent';
 import HomeComponent from './components/HomeComponent';
+import NavigationComponent from './components/NavigationComponent';
+import RegistrationComponent from './components/RegistrationComponent';
+import UserComponent from './components/UserComponent';
+import LogoutComponent from './components/LogoutComponent';
+
 function App() {
- return (
-<>
-{/* <NavigationComponent/> */}
+//   const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
-{/* <PageLayoutComponent/> */}
+//   const handleAdminLogin = () => {
+//     setAdminLoggedIn(true);
+//   };
 
-{/* <RegistrationComponent/>
-<UserComponent/> */}
-{/* <ProfileComponent/> */}
-{/* <SuccessComponent/> */}
-{/* <ErrorComponent/> */}
-{/* <LoadingComponent/> */}
-{/* <AdminComponent/> */}
-<HomeComponent/>
-</>
- )
-
-
+  return (
+    <Router>
+      <Routes>
+      <Route path="/" element={<HomeComponent/>} />
+      <Route path="/admin" element={<AdminComponent/>}/>
+      <Route path='/navigate' element={<NavigationComponent/>}/>
+      <Route path='/registration' element={<RegistrationComponent/>} />
+      <Route path='/view' element={<UserComponent/>}/>
+      <Route path="/logout" element={<LogoutComponent />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
