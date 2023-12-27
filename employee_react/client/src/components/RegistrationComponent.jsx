@@ -337,8 +337,7 @@ const RegistrationComponent=()=>{
   email:'',
   place:'',
   designation:'',
-  contact:'',
-  password:''
+  contact:''
  };
 
 
@@ -389,11 +388,7 @@ const RegistrationComponent=()=>{
     designation: Yup.string()
     .required("Required"),
 
-    password: Yup.string()
-  .required('No password provided.') 
-  .min(8, 'Password is too short - should be 8 chars minimum.')
-  .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, 'Password must contain one Uppercase and one lowercase and a number.'),
-
+  
   contact: Yup.string()
   .matches(/^[6-9]\d{9}$/, "Please enter valid phone number.")
 
@@ -461,17 +456,14 @@ return (
                 {backendErrors.contact && <div>{backendErrors.contact}</div>}
               </label>
             </div>
-            <div className="form-group text-center" >
+            {/* <div className="form-group text-center" >
             <label htmlFor='password' style={{ color: "blue" }}>
                 Password
                 <Field type="password" id="password" className="form-control" name = "password"   style={{padding:"15px"}}/>
-                {/* {errors.password && touched.password ? (
-                <div>{errors.password }  </div>
-                ) : null} */}
                 <ErrorMessage name="password" style={{color:"red"}} component="div"/>
   
                 </label>
-            </div>
+            </div> */}
   
             {/* <ErrorMessage name="name" style={{color:"red"}} component="div" /> */}
   

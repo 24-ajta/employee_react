@@ -9,9 +9,9 @@ function LogoutComponent() {
   useEffect(() => {
     async function logout() {
       try {
-        const response = await axios.post('http://localhost:3000/logout', {}, {
+        const response = await axios.post(`http://localhost:3000/logout`, {}, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // Assuming you store the access token in localStorage
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`, 
           },
         });
 

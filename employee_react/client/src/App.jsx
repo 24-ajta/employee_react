@@ -24,7 +24,7 @@ function App() {
       <Route path='/navigate' element={<NavigationComponent/>}/>
       <Route path='/registration' element={<RegistrationComponent/>} />
       <Route path='/view' element={<UserComponent/>}/>
-      <Route path="/logout" element={<LogoutComponent />} />
+      <Route path='/logout' element={<LogoutComponent />} />
       </Routes>
     </Router>
   );

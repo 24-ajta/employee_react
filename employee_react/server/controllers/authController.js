@@ -104,7 +104,7 @@ async function login(req,res){
     }
   }
 
-  exports.checkRevoked = function (req, res) {
+  async function checkRevoked (req, res) {
     return new Promise((resolve, reject) => {
       const authHeader = req.headers["authorization"];
       const token = authHeader.split(" ")[1];
@@ -174,4 +174,5 @@ async function logout (req,res){
 module.exports ={
     login,
     logout,
+    checkRevoked
 }

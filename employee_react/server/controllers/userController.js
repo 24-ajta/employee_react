@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const registereduservalidation = require("../validation/registervalid.js");
 const updateuservalidation = require("../validation/updateuservalidation.js");
+const { generateRandomPassword } = require("../managers/userManager");
 
 
 async function register(req, res) {
@@ -12,9 +13,12 @@ async function register(req, res) {
         console.log(req.body);
         let {name,email,place,designation,contact,password } = req.body;
         let validationResult= await registereduservalidation(req.body);
-        console.log("Validation Result...", validationResult);       
+        console.log("Validation Result...", validationResult);   
+        let userPassword = generateRandomPassword(5);
+        let salt = bcrypt.genSaltSync(10);
+        let hashed_password = bcrypt.hashSync(userPassword,salt);    
         if(validationResult.isValid){
-            let result = await users.create({ name,email,place,designation,contact, password,deleted:false});
+            let result = await users.create({ name,email,place,designation,contact, password:hashed_password,deleted:false});
             if(result){
             let response = successfunction({statusCode:200,data:result,message:"Registered Successfully"});
             return res.status(200).send(response);
