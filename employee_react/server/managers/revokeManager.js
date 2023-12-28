@@ -7,7 +7,7 @@ exports.revoke = async function (token) {
                 reject({ "status": 400, "message": "Invalid Access Token" });
             }
             else {
-                //console.log("Reached here ...");
+                console.log("Reached here ...");
                 let saveToken = await accessControl.findOneAndUpdate({ token: token }, { token: token }, { upsert: true, new : true },
                 //     function (err, data) {
                 //     if (err) reject({ "status": 400, "message": "Logout Failed" });
@@ -15,7 +15,7 @@ exports.revoke = async function (token) {
                 // }
                 
                 );
-
+                    console.log("saveToken",saveToken);
                 if(saveToken) {
 
                     resolve({"status" : 200, "message" : "Logout successful"});

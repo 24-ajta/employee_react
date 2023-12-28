@@ -7,8 +7,9 @@ import HomeComponent from './components/HomeComponent';
 import NavigationComponent from './components/NavigationComponent';
 import RegistrationComponent from './components/RegistrationComponent';
 import UserComponent from './components/UserComponent';
+import UpdateComponent from './components/UpdateComponent';
 import LogoutComponent from './components/LogoutComponent';
-
+import ProfileComponent from './components/ProfileComponent';
 function App() {
 //   const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
@@ -24,6 +25,8 @@ function App() {
       <Route path='/navigate' element={<NavigationComponent/>}/>
       <Route path='/registration' element={<RegistrationComponent/>} />
       <Route path='/view' element={<UserComponent/>}/>
+      <Route path='/profile/:id' element={<ProfileComponent />} />
+      <Route path='/update/:id' element={<UpdateComponent />} />
       <Route path='/logout' element={<LogoutComponent />} />
       </Routes>
     </Router>

@@ -46,15 +46,11 @@ return (
               <Link
                     to="/admin"
                   >
-                    Admin
+                    Login
                   </Link>
               </a>
             </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                Employee
-              </a>
-            </li>
+            
           </ul>
         </li>
         </ul>

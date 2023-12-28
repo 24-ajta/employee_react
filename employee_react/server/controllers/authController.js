@@ -32,7 +32,7 @@ async function login(req,res){
         if(user){
           bcrypt.compare(password,user.password,async(error,auth)=>{
             
-         
+         console.log("auth",auth);
             if(auth === true){
               let access_token=jwt.sign(
                 {user_id:user._id},
@@ -104,72 +104,144 @@ async function login(req,res){
     }
   }
 
-  async function checkRevoked (req, res) {
-    return new Promise((resolve, reject) => {
+
+
+  // async function checkRevoked (req, res) {
+  //   return new Promise((resolve, reject) => {
+  //     const authHeader = req.headers["authorization"];
+  //     const token = authHeader.split(" ")[1];
+  
+  //     revokeManager
+  //       .checkRevoked(token)
+  //       .then((message) => {
+  //         resolve(message);
+  //       })
+  //       .catch((error) => {
+  //         reject(error);
+  //       });
+  //   });
+  // }; 
+  async function checkRevoked(req, res) {
+    try {
       const authHeader = req.headers["authorization"];
       const token = authHeader.split(" ")[1];
   
-      revokeManager
-        .checkRevoked(token)
-        .then((message) => {
-          resolve(message);
-        })
-        .catch((error) => {
-          reject(error);
+      if (!token) {
+        return errorfunction({
+          statusCode: 400,
+          message: "Token is required",
         });
-    });
-  }; 
-
-async function logout (req,res){
-  try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader.split(" ")[1];
-
-    if(!token) {
-      let response = errorfunction({
-        statusCode:400,
-        message:"Token is required",
+      }
+  
+      const message = await revokeManager.checkRevoked(token);
+      return message;
+    } catch (error) {
+      return errorfunction({
+        statusCode: 500,
+        message: error.message || "Something went wrong while checking token revocation",
       });
-      res.status(response.statuscode).send(response);
-      return;
-    }
-
-    let isRevoked = await revokeManager.checkRevoked(token);
-
-    if(!isRevoked) {
-      revokeManager.revoke(token)
-      .then((result)=> {
-        let response = successfunction(result);
-        res.status(result.status).send(response);
-        return;
-      });
-    } else {
-      res.status(406).send(
-        errorfunction({
-          statusCode:406,
-          message:"Token already in revoked list",
-        })
-      );
-    }
-  } catch (error) {
-    if(process.env.NODE_ENV == "production") {
-      let response = errorfunction({
-        statusCode:400,
-        message:error
-         ? error.message
-          ? error.message
-          :error
-        : "Something went wrong",
-      });
-      res.status(response.statuscode).send(response);
-      return;
-    } else {
-      let response = errorfunction({statusCode:400,message:error});
-      res.status(response.statuscode).send(response);
-      return;
     }
   }
-};
+  
+ async function logout (req, res) {
+    try {
+      console.log("reached the logoutt");
+      const authHeader = req.headers["authorization"];
+      const token = authHeader.split(" ")[1];
+      if (!token) {
+        let response = errorfunction({
+          statusCode: 400,
+          message: "Token is required",
+        });
+        res.status(response.statuscode).send(response);
+        return;
+      }
+  
+      let isRevoked = await revokeManager.checkRevoked(token);
+      //console.log("isRevoked : ", isRevoked);
+      if (!isRevoked) {
+        revokeManager.revoke(token)
+          .then((result) => {
+            let response = successfunction(result);
+            res.status(result.status).send(response);
+            return;
+          })
+          .catch((error) => {
+            let response = errorfunction(error);
+            res.status(error.status).send(response);
+            return;
+          });
+      } else {
+        //console.log("Token already in revoked list");
+        res.status(406).send(
+          errorfunction({
+            statusCode: 406,
+            message: "Token already in revoked list",
+          })
+        );
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV == "production") {
+        let response = errorfunction({
+          statusCode: 400,
+          message: error
+            ? error.message
+              ? error.message
+              : error
+            : "Something went wrong",
+        });
+  
+        res.status(response.statuscode).send(response);
+        return;
+      } else {
+        let response = errorfunction({ statusCode: 400, message: error });
+        res.status(response.statuscode).send(response);
+        return;
+      }
+    }
+  };
+// async function logout(req, res) {
+//   try {
+//     const authHeader = req.headers["authorization"];
+//     const token = authHeader.split(" ")[1];
+
+//     if (!token) {
+//       let response = errorfunction({
+//         statusCode: 400,
+//         message: "Token is required",
+//       });
+//       res.status(response.statuscode).send(response);
+//       return;
+//     }
+
+//     let isRevoked = await revokeManager.checkRevoked(token);
+
+//     if (!isRevoked) {
+//       // Ensure to await the result of revokeManager.revoke() instead of using .then()
+//       let result = await revokeManager.revoke(token);
+//       let response = successfunction(result);
+//       res.status(result.status).send(response);
+//     } else {
+//       res.status(406).send(
+//         errorfunction({
+//           statusCode: 406,
+//           message: "Token already in revoked list",
+//         })
+//       );
+//     }
+//   } catch (error) {
+//     if (process.env.NODE_ENV == "production") {
+//       let response = errorfunction({
+//         statusCode: 400,
+//         message: error.message ? error.message : "Something went wrong",
+//       });
+//       res.status(response.statuscode).send(response);
+//     } else {
+//       let response = errorfunction({ statusCode: 400, message: error });
+//       res.status(response.statuscode).send(response);
+//     }
+//   }
+// }
 
 module.exports ={
     login,

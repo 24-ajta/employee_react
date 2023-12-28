@@ -873,8 +873,14 @@ function UpdateComponent() {
   const onDelete = async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('adminToken'); 
       const response = await axios.delete(
-        `http://localhost:3000/deletedata/${id}`
+        `http://localhost:3000/deletedata/${id}`,
+        {
+          headers:{
+            Authorization:`Bearer ${token}`,
+          },
+        }
       );
       if (response.data.success) {
         setDeletedata(true);
@@ -918,9 +924,15 @@ function UpdateComponent() {
     onSubmit: async (values, { setErrors, resetForm }) => {
       try {
         setLoading(true);
+        const token = localStorage.getItem('adminToken'); 
         const response = await axios.put(
           `http://localhost:3000/update/${id}`,
-          values
+          values,
+          {
+            headers:{
+              Authorization:`Bearer ${token}`,
+            },
+          }
         );
         console.log("Form Submitted", response.data.data);
         if (response.data.errors) {
@@ -1156,4 +1168,3 @@ function UpdateComponent() {
 }
 
 export default UpdateComponent;
-

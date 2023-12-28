@@ -345,7 +345,15 @@ const RegistrationComponent=()=>{
   try {
     setLoading(true)
     console.log("Before Axios")
-    const response= await axios.post(`http://localhost:3000/register`,values);
+    const token = localStorage.getItem('adminToken');
+    console.log("token",token);
+    const response= await axios.post(`http://localhost:3000/register`,values,
+    {
+      headers:{
+        Authorization:`Bearer ${token}`,
+      },
+    }
+    );
     console.log("After Axios");
     console.log("Form Submitted",response.data);
 

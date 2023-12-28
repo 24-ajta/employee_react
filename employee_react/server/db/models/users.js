@@ -27,6 +27,9 @@ const users = new mongoose.Schema(
         type: String,
         required: true,
       },
+      password:{
+        type:String
+      },
       user_type:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user_types"

@@ -257,8 +257,16 @@ function UserComponent() {
 
   const fetchData = () => {
     try {
+      const token = localStorage.getItem('adminToken'); 
+      console.log("token",token);
       axios
-      .get(`http://localhost:3000/listing?page=${currentPage}&pageSize=${pageSize}`)
+      .get(`http://localhost:3000/listing?page=${currentPage}&pageSize=${pageSize}`,
+      {
+        headers:{
+          Authorization:`Bearer ${token}`,
+        },
+      }
+      )
       .then((response) => {
         setData(response.data.data.datas || []);
         setTotalPages(response.data.data.totalpages || 0);

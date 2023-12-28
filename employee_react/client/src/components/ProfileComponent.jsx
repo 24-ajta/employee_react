@@ -163,7 +163,14 @@ const {id} = useParams();
 // console.log("id from useParams : ", id);
 
 useEffect(()=>{
-  axios.get(`http://localhost:3000/profile/${id}`)
+  const token = localStorage.getItem('adminToken');
+  axios.get(`http://localhost:3000/profile/${id}`,
+  {
+    headers:{
+      Authorization:`Bearer ${token}`,
+    },
+  }
+  )
   .then((response)=>{
       setData(response.data);
       // console.log(response.status,response.data);
@@ -185,7 +192,13 @@ const handleSubmit = (e) => {
    e.preventDefault();
    const {name,email,designation,place,contact} = data;
    console.log("Datas",data)
-   axios.put(`http://localhost:3000/update/${id}`,data)
+   const token = localStorage.getItem('adminToken');
+   axios.put(`http://localhost:3000/update/${id}`,data,
+   {
+    headers:{
+      Authorization:`Bearer ${token}`,
+    },
+  })
          .then((response) => {
         console.log('User updated successfully:', response.data);
       })
@@ -194,7 +207,13 @@ const handleSubmit = (e) => {
       });
 };
 const onDelete=async()=>{
-  axios.delete(`http://localhost:3000/api/deletedata/${id}`)
+  const token = localStorage.getItem('adminToken');
+  axios.delete(`http://localhost:3000/api/deletedata/${id}`,
+  {
+    headers:{
+      Authorization:`Bearer ${token}`,
+    },
+  })
   .then((response)=>{
     setData(response.data)
   })
