@@ -5,8 +5,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const registereduservalidation = require("../validation/registervalid.js");
 const updateuservalidation = require("../validation/updateuservalidation.js");
-const { generateRandomPassword } = require("../managers/userManager");
-
+const  generateRandomPassword  = require("../managers/userManager").generateRandomPassword;
+const setPassword = require('../utils/user_email_template/setPassword');
+const sendEmail = require('../utils/send-email').sendEmail;
 
 async function register(req, res) {
     try {
@@ -14,11 +15,27 @@ async function register(req, res) {
         let {name,email,place,designation,contact,password } = req.body;
         let validationResult= await registereduservalidation(req.body);
         console.log("Validation Result...", validationResult);   
-        let userPassword = generateRandomPassword(5);
+        let userPassword = await generateRandomPassword(5);
+        console.log("userpassword",userPassword);
         let salt = bcrypt.genSaltSync(10);
         let hashed_password = bcrypt.hashSync(userPassword,salt);    
         if(validationResult.isValid){
-            let result = await users.create({ name,email,place,designation,contact, password:hashed_password,deleted:false});
+            let result = await users.create({ 
+                name,
+                email,
+                place,
+                designation,
+                contact, 
+                password:hashed_password,
+                user_type:"6582cb2380ef6fd3df47947a",
+                deleted:false});
+                console.log("result",result);
+                let email_template= await setPassword(
+                    name,
+                    email,
+                    password
+                );
+                await sendEmail(email,"Account Created" ,email_template);
             if(result){
             let response = successfunction({statusCode:200,data:result,message:"Registered Successfully"});
             return res.status(200).send(response);

@@ -12,7 +12,6 @@ data.email=!isEmpty(data.email)?data.email:"";
 data.place=!isEmpty(data.place)?data.place:"";
 data.designation=!isEmpty(data.designation)?data.designation:"";
 data.contact=!isEmpty(data.contact)?data.contact:"";
-data.password=!isEmpty(data.password)?data.password:"";
 
 
 if(validator.isEmpty(data.name)){
@@ -63,9 +62,6 @@ if(!validator.isLength(data.contact,{min:10})){
     errors.contact="Please enter proper contact number"
 }
 
-if(validator.isEmpty(data.password)){
-    errors.password_empty="Password cannot be empty"
-}
 
 
 return {

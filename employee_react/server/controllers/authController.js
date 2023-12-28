@@ -4,7 +4,8 @@ const users = require("../db/models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const revokeManager = require('../managers/revokeManager');
-const accessControl = require("../db/models/revoked_tokens")
+const accessControl = require("../db/models/revoked_tokens");
+
 
 
 async function login(req,res){

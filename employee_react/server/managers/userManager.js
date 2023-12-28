@@ -20,6 +20,8 @@ async function generateRandomPassword(length) {
 // let salt = bcrypt.genSaltSync(10);
 // let password = bcrypt.hashSync(randomPassword,salt);
 
+
+
 module.exports = {
     generateRandomPassword
 }
