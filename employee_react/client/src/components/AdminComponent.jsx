@@ -59,7 +59,15 @@ function AdminComponent() {
         const receivedToken = response.data.data;
         console.log("admin token::", receivedToken);
         localStorage.setItem('adminToken', receivedToken);
-        navigate("/navigate");
+        // navigate("/navigate");
+        // console.log("")
+        if(response.data.usertype == 'admin'){
+          navigate("/navigate")
+        }
+        else if (response.data.usertype=='employee'){
+          navigate("/view")
+        }
+
         setSuccess(true);
         setShowform(false);
         // Redirect to the desired page (PageLayoutComponent in this case)

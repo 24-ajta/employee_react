@@ -103,8 +103,47 @@ async function login(req,res){
         return;
       }
     }
+}
+
+async function passwordResetController(req,res){
+try {
+  const authHeader =req.headers["authorization"]
+  const token = authHeader.split(" ")[1];
+  
+  let password = req.body.password;
+  let confirm_password=req.body.confirm_password;
+
+  decoded = jwt.decode(token);
+
+  let user = await users.findOne({
+    $and:[{_id:decoded.user_id}],
+  });
+  if(user){
+    let salt = bcrypt.genSaltSync(10);
+    let password_hash = bcrypt.hashSync(password,salt);
+    let data = await users.updateOne(
+      {_id:decoded.user_id},
+      {$set:{password:password_hash}}
+    );
+    if(data.matchedCount === 1 && data.modifiedCount ==1){
+      let response = successfunction({
+        status:200,
+        message:"Password changed Successfully",
+      });
+      res.status(response.statusCode).send(response);
+      return;
+    }else if(data.matchedCount === 0){
+      let response = errorfunction({
+        status:400,
+        message:"Password reset failed"
+      })
+    }
   }
 
+} catch (error) {
+  
+}
+}
 
 
   // async function checkRevoked (req, res) {
@@ -247,5 +286,6 @@ async function login(req,res){
 module.exports ={
     login,
     logout,
-    checkRevoked
+    checkRevoked,
+    passwordResetController
 }

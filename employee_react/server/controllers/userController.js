@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const registereduservalidation = require("../validation/registervalid.js");
 const updateuservalidation = require("../validation/updateuservalidation.js");
 const  generateRandomPassword  = require("../managers/userManager").generateRandomPassword;
-const setPassword = require('../utils/user_email_template/setPassword');
+const setPassword = require('../utils/user_email_template/setPassword').setPassword;
 const sendEmail = require('../utils/send-email').sendEmail;
 
 async function register(req, res) {
@@ -15,7 +15,7 @@ async function register(req, res) {
         let {name,email,place,designation,contact,password } = req.body;
         let validationResult= await registereduservalidation(req.body);
         console.log("Validation Result...", validationResult);   
-        let userPassword = await generateRandomPassword(5);
+        let userPassword = await generateRandomPassword(10);
         console.log("userpassword",userPassword);
         let salt = bcrypt.genSaltSync(10);
         let hashed_password = bcrypt.hashSync(userPassword,salt);    
@@ -33,12 +33,16 @@ async function register(req, res) {
                 let email_template= await setPassword(
                     name,
                     email,
-                    password
+                    userPassword
                 );
-                await sendEmail(email,"Account Created" ,email_template);
-            if(result){
-            let response = successfunction({statusCode:200,data:result,message:"Registered Successfully"});
-            return res.status(200).send(response);
+                console.log("email template",email_template);
+             const email_flag= await sendEmail(email,"Account Created" ,email_template);
+            if(result && email_flag){
+            let response = successfunction({statusCode:201,data:result,message:"Registered Successfully"});
+            return res.status(201).send(response);
+            }else if(!email_flag){
+                let response = errorfunction({statusCode:400,message:"User created but email not send"});
+                return res.status(400).send(response);
             }else{
             let response=errorfunction({statusCode:500,message:"Not Registered"});
             return res.status(500).send(response);
@@ -54,6 +58,8 @@ async function register(req, res) {
         return res.status(500).send("Error");
     }
 }
+
+
 
 async function listing(req,res){
     try {
