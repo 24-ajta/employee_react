@@ -10,6 +10,8 @@ import UserComponent from './components/UserComponent';
 import UpdateComponent from './components/UpdateComponent';
 import LogoutComponent from './components/LogoutComponent';
 import ProfileComponent from './components/ProfileComponent';
+import ResetComponent from './components/ResetComponent';
+import Employeenavbar from './components/Employeenavbar';
 function App() {
 //   const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
@@ -25,6 +27,9 @@ function App() {
       <Route path='/navigate' element={<NavigationComponent/>}/>
       <Route path='/registration' element={<RegistrationComponent/>} />
       <Route path='/view' element={<UserComponent/>}/>
+      <Route path='/employeenavbar' element={<Employeenavbar/>}/>
+      {/* <Route path='/viewprofile/:id' element={<UpdateComponent/>}/> */}
+      {/* <Route path='/viewprofile' element={<UpdateComponent/>}/> */}
       <Route path='/profile/:id' element={<ProfileComponent />} />
       <Route path='/update/:id' element={<UpdateComponent />} />
       <Route path='/logout' element={<LogoutComponent />} />

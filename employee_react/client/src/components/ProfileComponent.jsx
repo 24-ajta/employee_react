@@ -164,6 +164,7 @@ const {id} = useParams();
 
 useEffect(()=>{
   const token = localStorage.getItem('adminToken');
+  console.log("token in profilecomponent",token)
   axios.get(`http://localhost:3000/profile/${id}`,
   {
     headers:{

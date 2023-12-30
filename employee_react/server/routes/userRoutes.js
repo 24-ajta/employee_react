@@ -16,6 +16,7 @@ router.post('/register',setAccesControl('1,2'),userController.register);
 router.get('/listing',setAccesControl('1'),userController.listing);
 router.get('/profile/:id',setAccesControl('1,2'),userController.profile);
 router.put('/update/:id',setAccesControl('1,2'),userController.update);
+router.get('/viewprofile/:id',setAccesControl('2'),userController.update);
 router.delete('/deletedata/:id',setAccesControl('1,2'),userController.deletedata);
 
 module.exports = router;

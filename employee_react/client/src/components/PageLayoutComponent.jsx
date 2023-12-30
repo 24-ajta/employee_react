@@ -22,6 +22,8 @@ return (
       <Route path='/view' element={<UserComponent />} />
       <Route path='/profile/:id' element={<ProfileComponent />} />
       <Route path='/update/:id' element={<UpdateComponent />} />
+      <Route path='/resetpassword' element={<ResetComponent/>}/>
+
 </Routes>
 
     

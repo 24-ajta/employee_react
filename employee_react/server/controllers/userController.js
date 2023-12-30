@@ -121,7 +121,7 @@ async function update(req,res){
         let updatevalidationresult=await updateuservalidation(req.body);
         console.log("Update validation Result",updatevalidationresult);
         if(updatevalidationresult.isValid){
-            let result = await users.updateOne({_id:id,deleted: {$ne: true}},{$set:{name,email,designation,place,contact}});
+            let result = await users.updateOne({_id:id,deleted: {$ne: true}},{$set:{name,email,designation,place,contact,user_type:"6582cb2380ef6fd3df47947a",}});
             if(result){
                 let response = successfunction({statusCode:200,data:result,message:"User Updated Successfully"});
                 return res.status(200).send(response)

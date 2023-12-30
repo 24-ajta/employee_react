@@ -850,11 +850,44 @@ function UpdateComponent() {
   };
   const getDetails = async () => {
     try {
+      
+      console.log("Reached in getDetails")
+      const token = localStorage.getItem('adminToken');
+      console.log("token in getting profile", token);
       const response = await axios.get(
-        `http://localhost:3000/profile/${id}`
+        `http://localhost:3000/profile/${id}`,
+        {
+          headers:{
+            Authorization:`Bearer ${token}`,
+          },
+        }
       );
+      
+      console.log("response.data",response.data.data)
       formik.setValues(response.data.data);
       setEditData(response.data.data);
+      const userType = response.data.user_type;
+      console.log("userType",userType);
+      // const token = localStorage.getItem('adminToken');
+      // console.log("token in getting profile", token);
+      // const response = await axios.get(
+      //   `http://localhost:3000/profile/${id}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
+      // console.log("response.data.usertype",response.data.usertype)
+      // if (response.data.usertype === 'admin') {
+       
+      //   formik.setValues(response.data.data);
+      //   setEditData(response.data.data);
+      // } else if (response.data.usertype === 'employee' && id) {
+      //   console.log("response.data.usertype",response.data.usertype)
+      //   formik.setValues(response.data.data);
+      //   setEditData(response.data.data);
+      // }
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.log("User not found");
@@ -874,6 +907,7 @@ function UpdateComponent() {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken'); 
+      console.log("token",token);
       const response = await axios.delete(
         `http://localhost:3000/deletedata/${id}`,
         {
@@ -925,6 +959,7 @@ function UpdateComponent() {
       try {
         setLoading(true);
         const token = localStorage.getItem('adminToken'); 
+        console.log("token",token)
         const response = await axios.put(
           `http://localhost:3000/update/${id}`,
           values,
@@ -934,6 +969,7 @@ function UpdateComponent() {
             },
           }
         );
+        
         console.log("Form Submitted", response.data.data);
         if (response.data.errors) {
           setBackendErrors(response.data.errors);

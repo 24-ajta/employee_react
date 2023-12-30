@@ -8,7 +8,7 @@ function SuccessComponent({onClose,message}){
     return (
       <>
       
-              <div id="successcard" className="animated fadeIn">
+  <div id="successcard" className="animated fadeIn">
   <div id="upper-side-success">
     {/*?xml version="1.0" encoding="utf-8"?*/}
     {/* Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  */}

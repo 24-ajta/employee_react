@@ -111,13 +111,25 @@ try {
   const token = authHeader.split(" ")[1];
   
   let password = req.body.password;
+  console.log("password",password);
+
   let confirm_password=req.body.confirm_password;
+  console.log("confirm_password",confirm_password);
+
+  if (password !== confirm_password) {
+    let response = errorfunction({
+      statuscode: 400,
+      message: "Password and confirm password do not match",
+    });
+    return res.status(response.statuscode).send(response);
+  }
 
   decoded = jwt.decode(token);
 
   let user = await users.findOne({
     $and:[{_id:decoded.user_id}],
   });
+  
   if(user){
     let salt = bcrypt.genSaltSync(10);
     let password_hash = bcrypt.hashSync(password,salt);
@@ -127,20 +139,46 @@ try {
     );
     if(data.matchedCount === 1 && data.modifiedCount ==1){
       let response = successfunction({
-        status:200,
+        statusCode:200,
         message:"Password changed Successfully",
       });
       res.status(response.statusCode).send(response);
       return;
     }else if(data.matchedCount === 0){
       let response = errorfunction({
-        status:400,
-        message:"Password reset failed"
-      })
+        statuscode:404,
+        message:"User not found"
+      });
+      return res.status(response.statuscode).send(response);
+    } else {
+      let response = errorfunction({
+        statuscode:400,
+        message:"Password reset failed",
+      });
+      res.status(response.statuscode).send(response);
+      return;
     }
+  }else {
+    let response = errorfunction({
+      statuscode:403,
+      message:"Forbidden",
+    });
+    return res.status(response.statuscode).send(response);
   }
 
 } catch (error) {
+  
+    let response = errorfunction({
+      statuscode: 400,
+      message: error
+        ? error.message
+          ? error.message
+          : error
+        : "Something went wrong",
+    });
+
+    return res.status(response.statuscode).send(response);
+    
   
 }
 }
@@ -286,6 +324,7 @@ try {
 module.exports ={
     login,
     logout,
+    passwordResetController,
     checkRevoked,
-    passwordResetController
+   
 }
