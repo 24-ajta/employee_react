@@ -125,7 +125,13 @@ try {
   }
 
   decoded = jwt.decode(token);
-
+  const newToken = jwt.sign(
+    {user_id:decoded.user_id},
+    process.env.PRIVATE_KEY,
+    {expresIn:"10d"}
+  );
+  await accessControl.revoke();
+  return res.status(200).send(response)
   let user = await users.findOne({
     $and:[{_id:decoded.user_id}],
   });
@@ -176,7 +182,7 @@ try {
           : error
         : "Something went wrong",
     });
-
+    console.log("error in catch",error)
     return res.status(response.statuscode).send(response);
     
   
@@ -223,7 +229,7 @@ try {
   
  async function logout (req, res) {
     try {
-      console.log("reached the logoutt");
+      console.log("reached the logout");
       const authHeader = req.headers["authorization"];
       const token = authHeader.split(" ")[1];
       if (!token) {

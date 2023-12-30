@@ -30,6 +30,8 @@ function App() {
       <Route path='/employeenavbar' element={<Employeenavbar/>}/>
       {/* <Route path='/viewprofile/:id' element={<UpdateComponent/>}/> */}
       {/* <Route path='/viewprofile' element={<UpdateComponent/>}/> */}
+      <Route path='/employeelogin' element={<AdminComponent/>}/>
+      <Route path='/resetpassword' element={<ResetComponent/>}/>
       <Route path='/profile/:id' element={<ProfileComponent />} />
       <Route path='/update/:id' element={<UpdateComponent />} />
       <Route path='/logout' element={<LogoutComponent />} />

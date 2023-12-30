@@ -57,7 +57,7 @@ function AdminComponent() {
         setSuccess(false);
       } else if (response.data.success) {
         const receivedToken = response.data.data;
-        console.log("admin token::", receivedToken);
+        console.log("token when logged in::", receivedToken);
         localStorage.setItem('adminToken', receivedToken);
         // navigate("/navigate");
         // console.log("")
@@ -72,7 +72,8 @@ function AdminComponent() {
           const employeeId = response.data.data._id;
           console.log("employee id when logged in",employeeId);
           // localStorage.setItem('employeeId',employeeId)
-          navigate("/employeenavbar")
+          // navigate("/employeenavbar")
+          navigate('/resetpassword');
         }
 
         setSuccess(true);
@@ -97,7 +98,7 @@ function AdminComponent() {
 
     {showform && (
     <div>
-      <h1 style={{ textAlign: "center", color: "blue" }}>Admin login</h1>
+      <h1 style={{ textAlign: "center", color: "blue" }}>Login</h1>
       <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema}>
           <Form className='mt-5'>

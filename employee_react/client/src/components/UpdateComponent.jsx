@@ -185,10 +185,7 @@
 //         setNewData({
 //           name: response.data.name,
 //           email: response.data.email,
-//           place:response.data.place,
-//           designation:response.data.designation,
-//           contact:response.data.contact
-//           // Set other fields accordingly
+//           place:response.data.place,••••••••••
 //         });
 //       })
 //       .catch((error) => {

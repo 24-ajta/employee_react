@@ -53,7 +53,15 @@ function ResetComponent() {
 
   const handleSubmit = async (values, { setErrors, resetForm }) => {
     try {
-      const response = await axios.patch(`http://localhost:3000/resetpassword`, values);
+      const token = localStorage.getItem('adminToken'); 
+      console.log("token",token);
+      const response = await axios.patch(`http://localhost:3000/resetpassword`, values,
+      {
+        headers:{
+          Authorization:`Bearer ${token}`,
+        },
+      },
+      );
       
       if (response.data.errors) {
         setBackendErrors(response.data.errors);
@@ -65,7 +73,7 @@ function ResetComponent() {
         const receivedToken = response.data.data;
         console.log("admin token::", receivedToken);
         localStorage.setItem('adminToken', receivedToken);
-        navigate("/navigate");
+        navigate("/employeelogin");
         // console.log("")
         
 
