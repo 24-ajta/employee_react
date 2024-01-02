@@ -94,7 +94,8 @@ async function listing(req,res){
 async function profile(req,res){
     try {
         // console.log("single user id : ", req.params.id);
-        let id=req.params.id;
+        let id=req.params.id;//convert this id to new object id
+        console.log("id in profile",id)
         let userdetails=await users.findOne({_id : id,deleted:{$ne:true}}).select('-password -__v');
         if(userdetails){
             let response = successfunction({statusCode:200,data:userdetails,message:"Details of employee"});

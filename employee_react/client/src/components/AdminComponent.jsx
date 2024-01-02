@@ -71,6 +71,7 @@ function AdminComponent() {
 
           const employeeId = response.data.data._id;
           const hasResetPassword = response.data.passwordResetDone;
+          console.log("password reset or not",hasResetPassword)
           console.log("employee id when logged in",employeeId);
           // localStorage.setItem('employeeId',employeeId)
           // navigate("/employeenavbar")

@@ -30,6 +30,7 @@ async function login(req,res){
           return;
         }
         let usertype=user.user_type.user_type;
+        let passwordResetDone=user.passwordResetDone;
         if(user){
           bcrypt.compare(password,user.password,async(error,auth)=>{
             
@@ -40,20 +41,21 @@ async function login(req,res){
                 process.env.PRIVATE_KEY,
                 {expiresIn:"10d"}
               );
-              if (usertype === 'employee' && !user.passwordResetDone) {
-                let response = errorfunction({
-                  statusCode: 401,
-                  message: "Please reset your password"
-                });
-                res.status(response.statuscode).send(response);
-                return;
-              }
+              // if (usertype === 'employee' && !user.passwordResetDone) {
+              //   let response = errorfunction({
+              //     statusCode: 401,
+              //     message: "Please reset your password"
+              //   });
+              //   res.status(response.statuscode).send(response);
+              //   return;
+              // }
             let response=successfunction({
               statusCode:200,
               data:access_token,
               message:"Login successfull",
             });
             response.usertype=usertype;
+            response.passwordResetDone=passwordResetDone;
             res.status(response.statusCode).send(response);
             return;
             
@@ -140,9 +142,11 @@ try {
   // );
   // await accessControl.revoke();
   // return res.status(200).send(response)
+  console.log("decoded.user_id",decoded.user_id)
   let user = await users.findOne({
-    $and:[{_id:decoded.user_id}, { password_token: token }],
+    $and:[{_id:decoded.user_id}]
   });
+  console.log("user",user)
   
   if(user){
     let salt = bcrypt.genSaltSync(10);
@@ -194,8 +198,9 @@ try {
 
     res.status(response.statuscode).send(response);
     return;
-  } else {
+  }else {
     let response = errorfunction({ statuscode: 400, message: error });
+    console.log("error in catch else part",error)
     res.status(response.statuscode).send(response);
     return;
   }
