@@ -40,6 +40,14 @@ async function login(req,res){
                 process.env.PRIVATE_KEY,
                 {expiresIn:"10d"}
               );
+              if (usertype === 'employee' && !user.passwordResetDone) {
+                let response = errorfunction({
+                  statusCode: 401,
+                  message: "Please reset your password"
+                });
+                res.status(response.statuscode).send(response);
+                return;
+              }
             let response=successfunction({
               statusCode:200,
               data:access_token,
@@ -125,15 +133,15 @@ try {
   }
 
   decoded = jwt.decode(token);
-  const newToken = jwt.sign(
-    {user_id:decoded.user_id},
-    process.env.PRIVATE_KEY,
-    {expresIn:"10d"}
-  );
-  await accessControl.revoke();
-  return res.status(200).send(response)
+  // const newToken = jwt.sign(
+  //   {user_id:decoded.user_id},
+  //   process.env.PRIVATE_KEY,
+  //   {expresIn:"10d"}
+  // );
+  // await accessControl.revoke();
+  // return res.status(200).send(response)
   let user = await users.findOne({
-    $and:[{_id:decoded.user_id}],
+    $and:[{_id:decoded.user_id}, { password_token: token }],
   });
   
   if(user){
@@ -141,7 +149,7 @@ try {
     let password_hash = bcrypt.hashSync(password,salt);
     let data = await users.updateOne(
       {_id:decoded.user_id},
-      {$set:{password:password_hash}}
+      {$set: { password: password_hash, password_token: null ,passwordResetDone: true}}
     );
     if(data.matchedCount === 1 && data.modifiedCount ==1){
       let response = successfunction({
@@ -174,6 +182,7 @@ try {
 
 } catch (error) {
   
+  if (process.env.NODE_ENV == "production") {
     let response = errorfunction({
       statuscode: 400,
       message: error
@@ -182,9 +191,14 @@ try {
           : error
         : "Something went wrong",
     });
-    console.log("error in catch",error)
-    return res.status(response.statuscode).send(response);
-    
+
+    res.status(response.statuscode).send(response);
+    return;
+  } else {
+    let response = errorfunction({ statuscode: 400, message: error });
+    res.status(response.statuscode).send(response);
+    return;
+  }
   
 }
 }

@@ -15,7 +15,7 @@ return (
 <>
 
 
-<Routes>
+{/* <Routes>
       <Route path="/" element={<NavigationComponent />} />
       <Route path="/admin" element={<AdminComponent />} />
       <Route path='/registration' element={<RegistrationComponent />} />
@@ -24,7 +24,7 @@ return (
       <Route path='/update/:id' element={<UpdateComponent />} />
       <Route path='/resetpassword' element={<ResetComponent/>}/>
 
-</Routes>
+</Routes> */}
 
     
 </>

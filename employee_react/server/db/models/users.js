@@ -34,6 +34,10 @@ const users = new mongoose.Schema(
         type:mongoose.Schema.Types.ObjectId,
         ref:"user_types"
       },
+      passwordResetDone: {
+        type: Boolean,
+        default: false 
+      },
       deleted: {
         type: Boolean,
       },

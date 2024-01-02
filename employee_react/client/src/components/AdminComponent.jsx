@@ -70,10 +70,17 @@ function AdminComponent() {
         else if (response.data.usertype=='employee'){
 
           const employeeId = response.data.data._id;
+          const hasResetPassword = response.data.passwordResetDone;
           console.log("employee id when logged in",employeeId);
           // localStorage.setItem('employeeId',employeeId)
           // navigate("/employeenavbar")
-          navigate('/resetpassword');
+          if (hasResetPassword) {
+            // Redirect to employeenavbar page if password reset is done
+            navigate('/employeenavbar');
+          } else {
+            // Redirect to password reset page for the employee to reset the password
+            navigate('/resetpassword');
+          }
         }
 
         setSuccess(true);
