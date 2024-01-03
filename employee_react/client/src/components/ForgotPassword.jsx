@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage} from 'formik';
-import {Router,Routes,Route,Link, useNavigate} from 'react-router-dom';
+import {Router,Routes,Route, useNavigate} from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
 import SuccessComponent from "./SuccessComponent";
@@ -8,7 +8,7 @@ import ErrorComponent from "./ErrorComponent";
 import LoadingComponent from "./LoadingComponent";
 import NavigationComponent from "./NavigationComponent";
 
-function AdminComponent() {
+function ForgotPassword() {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -31,7 +31,8 @@ function AdminComponent() {
 
   const initialValues = {
     email: '',
-    password: ''
+    password: '',
+    confirm_password:''
   };
 
   const SignupSchema = Yup.object().shape({
@@ -43,11 +44,24 @@ function AdminComponent() {
       .required('No password provided.')
       .min(8, 'Password is too short - should be 8 chars minimum.')
       .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, 'Password must contain one Uppercase, one lowercase, and a number.'),
-  });
+  
+  confirm_password:Yup.string()
+  .required('No password provided.')
+  .min(8, 'Password is too short - should be 8 chars minimum.')
+  .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, 'Password must contain one Uppercase, one lowercase, and a number.'),
+});
 
   const handleSubmit = async (values, { setErrors, resetForm }) => {
     try {
-      const response = await axios.post(`http://localhost:3000/login`, values);
+      const token = localStorage.getItem('adminToken'); 
+      console.log("token",token);
+      const response = await axios.patch(`http://localhost:3000/forgotpassword`, values,
+      {
+        headers:{
+          Authorization:`Bearer ${token}`,
+        },
+      },
+      );
       
       if (response.data.errors) {
         setBackendErrors(response.data.errors);
@@ -57,32 +71,11 @@ function AdminComponent() {
         setSuccess(false);
       } else if (response.data.success) {
         const receivedToken = response.data.data;
-        console.log("token when logged in::", receivedToken);
+        console.log("admin token::", receivedToken);
         localStorage.setItem('adminToken', receivedToken);
-        // navigate("/navigate");
+        navigate("/employeelogin");
         // console.log("")
-        console.log("Logged in employee id:", response.data.data._id);
-        if(response.data.usertype == 'admin'){
-          navigate("/navigate")
-          const adminId = response.data.data._id;
-          console.log("admin id",adminId)
-        }
-        else if (response.data.usertype=='employee'){
-
-          const employeeId = response.data.data._id;
-          const hasResetPassword = response.data.passwordResetDone;
-          console.log("password reset or not",hasResetPassword)
-          console.log("employee id when logged in",employeeId);
-          // localStorage.setItem('employeeId',employeeId)
-          // navigate("/employeenavbar")
-          if (hasResetPassword) {
-            // Redirect to employeenavbar page if password reset is done
-            navigate('/employeenavbar');
-          } else {
-            // Redirect to password reset page for the employee to reset the password
-            navigate('/resetpassword');
-          }
-        }
+        
 
         setSuccess(true);
         setShowform(false);
@@ -106,7 +99,7 @@ function AdminComponent() {
 
     {showform && (
     <div>
-      <h1 style={{ textAlign: "center", color: "blue" }}>Login</h1>
+      <h1 style={{ textAlign: "center", color: "blue" }}>Reset Password</h1>
       <div className="container mx-auto col-sm-12 col-md-12 col-lg-4">
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={SignupSchema}>
           <Form className='mt-5'>
@@ -128,12 +121,17 @@ function AdminComponent() {
                   {backendErrors.password_empty && <div>{backendErrors.password_empty}</div>}
                 </label>
               </div>
+              <div className="form-group text-center " >
+                <label htmlFor='confirm_password' style={{ color: "blue" }}>
+                 Confirm Password
+                  <Field type="password" id="confirm_password" name="confirm_password" className="form-control" style={{ padding: "15px" }} />
+                  <ErrorMessage name="confirm_password" style={{ color: "red" }} component="div" />
+                  {backendErrors.password_empty && <div>{backendErrors.password_empty}</div>}
+                </label>
+              </div>
               <div className="form-group text-center" style={{ padding: "20px" }}>
                 <button type="submit" className="btn btn-primary" >Login</button>
                 <ErrorMessage name="submitError" style={{ color: "red" }} component="div" />
-              </div>
-              <div className="form-group text-center" style={{ padding: "20px" }}>
-                <Link to='/forgotpassword'><button type="button" className="btn btn-primary" >Forgot Password</button></Link>
               </div>
             </div>
           </Form>
@@ -155,5 +153,5 @@ function AdminComponent() {
   );
 }
 
-export default AdminComponent;
+export default ForgotPassword;
 

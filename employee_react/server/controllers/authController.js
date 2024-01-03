@@ -3,306 +3,385 @@ const errorfunction = require("../utils/responsehandler").errorfunction;
 const users = require("../db/models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const revokeManager = require('../managers/revokeManager');
+const revokeManager = require("../managers/revokeManager");
+const forgotpassword = require("../utils/user_email_template/resetPassword").forgotpassword;
+const sendEmail = require('../utils/send-email').sendEmail;
 const accessControl = require("../db/models/revoked_tokens");
 
+async function login(req, res) {
+  try {
+    console.log("Request Body:", req.body);
 
+    let email = req.body.email;
+    let password = req.body.password;
+    console.log("email and password:", email, password);
 
-async function login(req,res){
-    try {
-      console.log("Request Body:", req.body);
-  
-      let email=req.body.email;
-      let password=req.body.password;
-      console.log("email and password:",email,password)
-      
-      if(email && password){
-        let user=await users.findOne({
-          $and:[{email:email}],
+    if (email && password) {
+      let user = await users
+        .findOne({
+          $and: [{ email: email }],
         })
         .populate("user_type");
-        console.log("email:",email)        
-        console.log("user", user);
-  
-        if(!user){
-          let response=errorfunction({statusCode:400,message:"User not found"})
-          res.status(response.statuscode).send(response)
-          return;
-        }
-        let usertype=user.user_type.user_type;
-        let passwordResetDone=user.passwordResetDone;
-        if(user){
-          bcrypt.compare(password,user.password,async(error,auth)=>{
-            
-         console.log("auth",auth);
-            if(auth === true){
-              let access_token=jwt.sign(
-                {user_id:user._id},
-                process.env.PRIVATE_KEY,
-                {expiresIn:"10d"}
-              );
-              // if (usertype === 'employee' && !user.passwordResetDone) {
-              //   let response = errorfunction({
-              //     statusCode: 401,
-              //     message: "Please reset your password"
-              //   });
-              //   res.status(response.statuscode).send(response);
-              //   return;
-              // }
-            let response=successfunction({
-              statusCode:200,
-              data:access_token,
-              message:"Login successfull",
+      console.log("email:", email);
+      console.log("user", user);
+
+      if (!user) {
+        let response = errorfunction({
+          statusCode: 400,
+          message: "User not found",
+        });
+        res.status(response.statuscode).send(response);
+        return;
+      }
+      let usertype = user.user_type.user_type;
+      let passwordResetDone = user.passwordResetDone;
+      if (user) {
+        bcrypt.compare(password, user.password, async (error, auth) => {
+          console.log("auth", auth);
+          if (auth === true) {
+            let access_token = jwt.sign(
+              { user_id: user._id },
+              process.env.PRIVATE_KEY,
+              { expiresIn: "10d" }
+            );
+            // if (usertype === 'employee' && !user.passwordResetDone) {
+            //   let response = errorfunction({
+            //     statusCode: 401,
+            //     message: "Please reset your password"
+            //   });
+            //   res.status(response.statuscode).send(response);
+            //   return;
+            // }
+            let response = successfunction({
+              statusCode: 200,
+              data: access_token,
+              message: "Login successfull",
             });
-            response.usertype=usertype;
-            response.passwordResetDone=passwordResetDone;
+            response.usertype = usertype;
+            response.passwordResetDone = passwordResetDone;
             res.status(response.statusCode).send(response);
             return;
-            
-          }else{
-            let response=errorfunction({
-              statusCode:401,
-              message:"Invalid credentials"
+          } else {
+            let response = errorfunction({
+              statusCode: 401,
+              message: "Invalid credentials",
             });
             res.status(response.statuscode).send(response);
             return;
           }
-        })
-        }else{
-          let response=errorfunction({
-            statusCode:401,
-            message:"Invalid credentials"
-          });
-          res.status(response.statuscode).send(response);
-          return;
-        }
-          }else{
-            if(!email){
-              let response=errorfunction({
-                statusCode:422,
-                message:"Email is required",
-              });
-              res.status(response.statuscode).send(response);
-              return;
-            }
-            if(!password){
-              let response=errorfunction({
-                statusCode:422,
-                message:"Password is required",
-              });
-              res.status(response.statuscode).send(response)
-              return;
-            }
-          }
-       
-    } catch (error) {
-      if(process.env.NODE_ENV=="production"){
-        let response=errorfunction({
-          statusCode:400,
-          message:error
-          ?error.message 
-             ?error.message
-             :error
-          :"Something went wrong"
         });
-        res.status(response.statuscode).send(response)
+      } else {
+        let response = errorfunction({
+          statusCode: 401,
+          message: "Invalid credentials",
+        });
+        res.status(response.statuscode).send(response);
         return;
-      }else{
-        let response=errorfunction({statusCode:400,message:error});
-        res.status(response.statuscode).send(response)
+      }
+    } else {
+      if (!email) {
+        let response = errorfunction({
+          statusCode: 422,
+          message: "Email is required",
+        });
+        res.status(response.statuscode).send(response);
+        return;
+      }
+      if (!password) {
+        let response = errorfunction({
+          statusCode: 422,
+          message: "Password is required",
+        });
+        res.status(response.statuscode).send(response);
         return;
       }
     }
+  } catch (error) {
+    if (process.env.NODE_ENV == "production") {
+      let response = errorfunction({
+        statusCode: 400,
+        message: error
+          ? error.message
+            ? error.message
+            : error
+          : "Something went wrong",
+      });
+      res.status(response.statuscode).send(response);
+      return;
+    } else {
+      let response = errorfunction({ statusCode: 400, message: error });
+      res.status(response.statuscode).send(response);
+      return;
+    }
+  }
 }
 
-async function passwordResetController(req,res){
-try {
-  const authHeader =req.headers["authorization"]
-  const token = authHeader.split(" ")[1];
-  
-  let password = req.body.password;
-  console.log("password",password);
+async function passwordResetController(req, res) {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader.split(" ")[1];
 
-  let confirm_password=req.body.confirm_password;
-  console.log("confirm_password",confirm_password);
+    let password = req.body.password;
+    console.log("password", password);
 
-  if (password !== confirm_password) {
-    let response = errorfunction({
-      statuscode: 400,
-      message: "Password and confirm password do not match",
-    });
-    return res.status(response.statuscode).send(response);
-  }
+    let confirm_password = req.body.confirm_password;
+    console.log("confirm_password", confirm_password);
 
-  decoded = jwt.decode(token);
-  // const newToken = jwt.sign(
-  //   {user_id:decoded.user_id},
-  //   process.env.PRIVATE_KEY,
-  //   {expresIn:"10d"}
-  // );
-  // await accessControl.revoke();
-  // return res.status(200).send(response)
-  console.log("decoded.user_id",decoded.user_id)
-  let user = await users.findOne({
-    $and:[{_id:decoded.user_id}]
-  });
-  console.log("user",user)
-  
-  if(user){
-    let salt = bcrypt.genSaltSync(10);
-    let password_hash = bcrypt.hashSync(password,salt);
-    let data = await users.updateOne(
-      {_id:decoded.user_id},
-      {$set: { password: password_hash, password_token: null ,passwordResetDone: true}}
-    );
-    if(data.matchedCount === 1 && data.modifiedCount ==1){
-      let response = successfunction({
-        statusCode:200,
-        message:"Password changed Successfully",
-      });
-      res.status(response.statusCode).send(response);
-      return;
-    }else if(data.matchedCount === 0){
+    if (password !== confirm_password) {
       let response = errorfunction({
-        statuscode:404,
-        message:"User not found"
+        statuscode: 400,
+        message: "Password and confirm password do not match",
       });
       return res.status(response.statuscode).send(response);
+    }
+
+    decoded = jwt.decode(token);
+    // const newToken = jwt.sign(
+    //   {user_id:decoded.user_id},
+    //   process.env.PRIVATE_KEY,
+    //   {expresIn:"10d"}
+    // );
+    // await accessControl.revoke();
+    // return res.status(200).send(response)
+    console.log("decoded.user_id", decoded.user_id);
+    let user = await users.findOne({
+      $and: [{ _id: decoded.user_id }],
+    });
+    console.log("user", user);
+
+    if (user) {
+      let salt = bcrypt.genSaltSync(10);
+      let password_hash = bcrypt.hashSync(password, salt);
+      let data = await users.updateOne(
+        { _id: decoded.user_id },
+        {
+          $set: {
+            password: password_hash,
+            password_token: null,
+            passwordResetDone: true,
+          },
+        }
+      );
+      if (data.matchedCount === 1 && data.modifiedCount == 1) {
+        let response = successfunction({
+          statusCode: 200,
+          message: "Password changed Successfully",
+        });
+        res.status(response.statusCode).send(response);
+        return;
+      } else if (data.matchedCount === 0) {
+        let response = errorfunction({
+          statuscode: 404,
+          message: "User not found",
+        });
+        return res.status(response.statuscode).send(response);
+      } else {
+        let response = errorfunction({
+          statuscode: 400,
+          message: "Password reset failed",
+        });
+        res.status(response.statuscode).send(response);
+        return;
+      }
     } else {
       let response = errorfunction({
-        statuscode:400,
-        message:"Password reset failed",
+        statuscode: 403,
+        message: "Forbidden",
+      });
+      return res.status(response.statuscode).send(response);
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV == "production") {
+      let response = errorfunction({
+        statuscode: 400,
+        message: error
+          ? error.message
+            ? error.message
+            : error
+          : "Something went wrong",
+      });
+
+      res.status(response.statuscode).send(response);
+      return;
+    } else {
+      let response = errorfunction({ statuscode: 400, message: error });
+      console.log("error in catch else part", error);
+      res.status(response.statuscode).send(response);
+      return;
+    }
+  }
+}
+
+async function forgotPassword(req, res) {
+  try {
+    let email = req.body.email;
+    console.log("Reached in forgotpassword");
+    console.log("email",req.body.email);
+    if (email) {
+      let user = await users.findOne({ email: email });
+      if (user) {
+        let reset_token = jwt.sign(
+          { user_id: user._id },
+          process.env.PRIVATE_KEY,
+          { expiresIn: "10m" }
+        );
+        let data = await users.updateOne(
+          { email: email },
+          { $set: { password_token: reset_token } }
+        );
+        if (data.matchedCount === 1 && data.modifiedCount == 1) {
+          let reset_link = `${process.env.FRONTEND_URL}/forgotpassword?token=${reset_token}`;
+          let email_template = await forgotpassword(user.name, reset_link);
+          sendEmail(email, "Forgot Password", email_template);
+          let response = successfunction({
+            statusCode: 200,
+            message: "Email send successfully",
+          });
+          return res.status(response.statusCode).send(response);
+        } else if (data.matchedCount === 0) {
+          let response = errorfunction({
+            statusCode: 404,
+            message: "User not found",
+          });
+          return res.status(response.statuscode).send(response);
+        } else {
+          let response = errorfunction({
+            statuscode: 400,
+            message: "Password Reset Failed",
+          });
+          return res.status(response.statuscode).send(response);
+        }
+      } else {
+        let response = errorfunction({ statuscode: 403, message: "Forbidden" });
+        return res.status(response.statuscode).send(response);
+      }
+    } else {
+      let response = errorfunction({
+        statuscode: 422,
+        message: "Email is required",
+      });
+      return res.status(response.statuscode).send(response);
+    }
+  } catch (error) {
+        if (process.env.NODE_ENV == "production") {
+          let response = errorfunction({
+            statuscode: 400,
+            message: error
+              ? error.message
+                ? error.message
+                : error
+              : "Something went wrong",
+          });
+
+          res.status(response.statuscode).send(response);
+          return;
+        } else {
+          let response = errorfunction({ statuscode: 400, message: error });
+          console.log("error in response",response)
+          res.status(400).send(response);
+          return;
+        }
+      }
+  };
+
+
+
+// async function checkRevoked (req, res) {
+//   return new Promise((resolve, reject) => {
+//     const authHeader = req.headers["authorization"];
+//     const token = authHeader.split(" ")[1];
+
+//     revokeManager
+//       .checkRevoked(token)
+//       .then((message) => {
+//         resolve(message);
+//       })
+//       .catch((error) => {
+//         reject(error);
+//       });
+//   });
+// };
+async function checkRevoked(req, res) {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return errorfunction({
+        statusCode: 400,
+        message: "Token is required",
+      });
+    }
+
+    const message = await revokeManager.checkRevoked(token);
+    return message;
+  } catch (error) {
+    return errorfunction({
+      statusCode: 500,
+      message:
+        error.message || "Something went wrong while checking token revocation",
+    });
+  }
+}
+
+async function logout(req, res) {
+  try {
+    console.log("reached the logout");
+    const authHeader = req.headers["authorization"];
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      let response = errorfunction({
+        statusCode: 400,
+        message: "Token is required",
       });
       res.status(response.statuscode).send(response);
       return;
     }
-  }else {
-    let response = errorfunction({
-      statuscode:403,
-      message:"Forbidden",
-    });
-    return res.status(response.statuscode).send(response);
-  }
 
-} catch (error) {
-  
-  if (process.env.NODE_ENV == "production") {
-    let response = errorfunction({
-      statuscode: 400,
-      message: error
-        ? error.message
+    let isRevoked = await revokeManager.checkRevoked(token);
+    //console.log("isRevoked : ", isRevoked);
+    if (!isRevoked) {
+      revokeManager
+        .revoke(token)
+        .then((result) => {
+          let response = successfunction(result);
+          res.status(result.status).send(response);
+          return;
+        })
+        .catch((error) => {
+          let response = errorfunction(error);
+          res.status(error.status).send(response);
+          return;
+        });
+    } else {
+      //console.log("Token already in revoked list");
+      res.status(406).send(
+        errorfunction({
+          statusCode: 406,
+          message: "Token already in revoked list",
+        })
+      );
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV == "production") {
+      let response = errorfunction({
+        statusCode: 400,
+        message: error
           ? error.message
-          : error
-        : "Something went wrong",
-    });
-
-    res.status(response.statuscode).send(response);
-    return;
-  }else {
-    let response = errorfunction({ statuscode: 400, message: error });
-    console.log("error in catch else part",error)
-    res.status(response.statuscode).send(response);
-    return;
-  }
-  
-}
-}
-
-
-  // async function checkRevoked (req, res) {
-  //   return new Promise((resolve, reject) => {
-  //     const authHeader = req.headers["authorization"];
-  //     const token = authHeader.split(" ")[1];
-  
-  //     revokeManager
-  //       .checkRevoked(token)
-  //       .then((message) => {
-  //         resolve(message);
-  //       })
-  //       .catch((error) => {
-  //         reject(error);
-  //       });
-  //   });
-  // }; 
-  async function checkRevoked(req, res) {
-    try {
-      const authHeader = req.headers["authorization"];
-      const token = authHeader.split(" ")[1];
-  
-      if (!token) {
-        return errorfunction({
-          statusCode: 400,
-          message: "Token is required",
-        });
-      }
-  
-      const message = await revokeManager.checkRevoked(token);
-      return message;
-    } catch (error) {
-      return errorfunction({
-        statusCode: 500,
-        message: error.message || "Something went wrong while checking token revocation",
-      });
-    }
-  }
-  
- async function logout (req, res) {
-    try {
-      console.log("reached the logout");
-      const authHeader = req.headers["authorization"];
-      const token = authHeader.split(" ")[1];
-      if (!token) {
-        let response = errorfunction({
-          statusCode: 400,
-          message: "Token is required",
-        });
-        res.status(response.statuscode).send(response);
-        return;
-      }
-  
-      let isRevoked = await revokeManager.checkRevoked(token);
-      //console.log("isRevoked : ", isRevoked);
-      if (!isRevoked) {
-        revokeManager.revoke(token)
-          .then((result) => {
-            let response = successfunction(result);
-            res.status(result.status).send(response);
-            return;
-          })
-          .catch((error) => {
-            let response = errorfunction(error);
-            res.status(error.status).send(response);
-            return;
-          });
-      } else {
-        //console.log("Token already in revoked list");
-        res.status(406).send(
-          errorfunction({
-            statusCode: 406,
-            message: "Token already in revoked list",
-          })
-        );
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV == "production") {
-        let response = errorfunction({
-          statusCode: 400,
-          message: error
             ? error.message
-              ? error.message
-              : error
-            : "Something went wrong",
-        });
-  
-        res.status(response.statuscode).send(response);
-        return;
-      } else {
-        let response = errorfunction({ statusCode: 400, message: error });
-        res.status(response.statuscode).send(response);
-        return;
-      }
+            : error
+          : "Something went wrong",
+      });
+
+      res.status(response.statuscode).send(response);
+      return;
+    } else {
+      let response = errorfunction({ statusCode: 400, message: error });
+      res.status(response.statuscode).send(response);
+      return;
     }
-  };
+  }
+}
 // async function logout(req, res) {
 //   try {
 //     const authHeader = req.headers["authorization"];
@@ -346,10 +425,10 @@ try {
 //   }
 // }
 
-module.exports ={
-    login,
-    logout,
-    passwordResetController,
-    checkRevoked,
-   
-}
+module.exports = {
+  login,
+  logout,
+  passwordResetController,
+  checkRevoked,
+  forgotPassword,
+};

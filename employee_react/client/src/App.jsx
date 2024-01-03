@@ -12,6 +12,7 @@ import LogoutComponent from './components/LogoutComponent';
 import ProfileComponent from './components/ProfileComponent';
 import ResetComponent from './components/ResetComponent';
 import Employeenavbar from './components/Employeenavbar';
+import ForgotPassword from './components/ForgotPassword';
 function App() {
 //   const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
@@ -32,6 +33,7 @@ function App() {
       {/* <Route path='/viewprofile' element={<UpdateComponent/>}/> */}
       <Route path='/employeelogin' element={<AdminComponent/>}/>
       <Route path='/resetpassword' element={<ResetComponent/>}/>
+      <Route path='/forgotpassword' element={<ForgotPassword/>}/>
       <Route path='/profile/:id' element={<ProfileComponent />} />
       <Route path='/update/:id' element={<UpdateComponent />} />
       <Route path='/logout' element={<LogoutComponent />} />
