@@ -11,7 +11,7 @@ dotenv.config();
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 app.use(cors({ orgin: 'http://localhost:3000' }));
-
+app.use(express.static(__dirname + "/public"))
 app.use(authRoutes);
 app.use(userRoutes);
 
